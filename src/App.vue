@@ -1,6 +1,8 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
+import LabList from './components/LabList.vue'
+
 </script>
 
 <template>
@@ -18,6 +20,9 @@ import HelloWorld from './components/HelloWorld.vue'
   </header>
 
   <RouterView />
+  <div id="app">
+    <lab-list></lab-list>
+  </div>
 </template>
 
 <style scoped>
