@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-use App\Domain\User\UserRepository;
-use App\Infrastructure\Persistence\User\InMemoryUserRepository;
+use App\Domain\Users\UsersRepository;
+use App\Infrastructure\Persistence\Users\DatabaseUsersRepository;
 use DI\ContainerBuilder;
 
 return function (ContainerBuilder $containerBuilder) {
-    // Here we map our UserRepository interface to its in memory implementation
+    // 这里我们将 UsersRepository 接口映射到其数据库实现
     $containerBuilder->addDefinitions([
-        UserRepository::class => \DI\autowire(InMemoryUserRepository::class),
+        UsersRepository::class => \DI\autowire(DatabaseUsersRepository::class),
     ]);
 };

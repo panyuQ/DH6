@@ -1,8 +1,10 @@
 <?php
 declare(strict_types=1);
 
-use App\Application\Actions\User\ListUsersAction;
-use App\Application\Actions\User\ViewUserAction;
+use App\Application\Actions\Users\AllUsersAction;
+use App\Application\Actions\Users\UserUsersAction;
+use App\Application\Actions\Users\FeildUsersAction;
+use App\Application\Actions\Users\FeildContrastUsersAction;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\App;
@@ -15,29 +17,16 @@ return function (App $app) {
     });
 
     $app->get('/', function (Request $request, Response $response) {
-        $response->getBody()->write('Hello world!');
+        $response->getBody()->write('DH6 API');
         return $response;
     });
 
     $app->group('/users', function (Group $group) {
-        $group->get('', ListUsersAction::class);
-        $group->get('/{id}', ViewUserAction::class);
+        $group->get('', AllUsersAction::class);
+        $group->get('/{id}', UserUsersAction::class);
+        $group->get('/{field}/{id}', FeildUsersAction::class);
+        $group->get('/{field}/{id}/{fieldValue}', FeildContrastUsersAction::class);
+        
     });
     
-    $app->get('/api/hello', function (Request $request, Response $response, array $args) {
-        $response->getBody()->write(json_encode(['message' => 'Hello, World!']));
-        return $response
-            ->withHeader('Content-Type', 'application/json');
-    });
-
-    $app->get('/api/labs', function (Request $request, Response $response, array $args) {
-        $labs = [
-            ['id' => 1, 'name' => 'Lab A'],
-            ['id' => 2, 'name' => 'Lab B'],
-            ['id' => 3, 'name' => 'Lab C']
-        ];
-        $response->getBody()->write(json_encode($labs));
-        return $response
-            ->withHeader('Content-Type', 'application/json');
-    });
 };

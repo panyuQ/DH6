@@ -22,7 +22,7 @@ export default {
   methods: {
     async fetchLabs() {
       try {
-        const response = await axios.get('http://localhost:8080/api/labs');
+        const response = await axios.get('http://localhost:8081/api/labs');
         this.labs = response.data;
       } catch (error) {
         console.error('Error fetching labs:', error);

@@ -8,6 +8,7 @@ use Monolog\Logger;
 use Monolog\Processor\UidProcessor;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
+use App\Infrastructure\Persistence\Users\DatabaseUsersRepository;
 
 return function (ContainerBuilder $containerBuilder) {
     $containerBuilder->addDefinitions([
@@ -24,6 +25,23 @@ return function (ContainerBuilder $containerBuilder) {
             $logger->pushHandler($handler);
 
             return $logger;
+        },
+
+        // 添加 PDO 数据库连接配置
+        PDO::class => function (ContainerInterface $c) {
+            $settings = $c->get(SettingsInterface::class)->get('db');
+            $dsn = sprintf(
+                '%s:host=%s;dbname=%s;charset=%s',
+                $settings['driver'],
+                $settings['host'],
+                $settings['database'],
+                $settings['charset']
+            );
+            return new PDO($dsn, $settings['username'], $settings['password'], $settings['flags']);
+        },
+
+        DatabaseUsersRepository::class => function (ContainerInterface $c) {
+            return new DatabaseUsersRepository($c->get(PDO::class));
         },
     ]);
 };
