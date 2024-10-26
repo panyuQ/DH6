@@ -1,28 +1,28 @@
 # DH6
 
-This template should help get you started developing with Vue 3 in Vite.
+此模板应有助于您开始使用 Vue 3 和 Vite 进行开发。
 
-## Recommended IDE Setup
+## 推荐的 IDE 设置
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar)（并禁用 Vetur）。
 
-## Customize configuration
+## 自定义配置
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+参见 [Vite 配置参考](https://vite.dev/config/)。
 
-## Project Setup
+## 项目设置
 
 ```sh
 npm install
 ```
 
-### Compile and Hot-Reload for Development
+### 开发环境下的编译和热重载
 
 ```sh
 npm run dev
 ```
 
-### Compile and Minify for Production
+### 生产环境下的编译和压缩
 
 ```sh
 npm run build
