@@ -15,9 +15,9 @@ interface UsersRepository
      * @return Users
      * @throws UsersNotFoundException
      */
-    public function findUserOfId(int $id): ?Users;
+    public function findUserById(int $id): ?Users;
 
-    public function findFieldOfId(int $id, string $field): ?string;
+    public function findFieldById(int $id, string $field): ?string;
 
     public function fieldContrast(int $id, string $field, string $fieldValue): ?bool;
 }

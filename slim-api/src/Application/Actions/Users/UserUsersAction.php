@@ -13,7 +13,7 @@ class UserUsersAction extends UsersAction
     protected function action(): Response
     {
         $id = (int) $this->resolveArg('id');
-        $user = $this->usersRepository->findUserOfId($id);
+        $user = $this->usersRepository->findUserById($id);
 
         $this->logger->info("查找 `users` (id: $id)");
 

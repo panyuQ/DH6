@@ -4,7 +4,7 @@ declare(strict_types=1);
 use App\Application\Actions\Users\AllUsersAction;
 use App\Application\Actions\Users\UserUsersAction;
 use App\Application\Actions\Users\FeildUsersAction;
-use App\Application\Actions\Users\FeildContrastUsersAction;
+use App\Application\Actions\Users\ContrastFeildUsersAction;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\App;
@@ -24,8 +24,8 @@ return function (App $app) {
         return $response;
     });
         
-    // 获取信息 相关路由
-    $app->group('/get/users', function (Group $group) {
+    // 查找信息 相关路由
+    $app->group('/find/users', function (Group $group) {
         $group->get('', AllUsersAction::class);
         $group->get('/{id}', UserUsersAction::class);
         $group->get('/{field}/{id}', FeildUsersAction::class);
@@ -33,6 +33,6 @@ return function (App $app) {
 
     // 对比信息 相关路由
     $app->group('/contrast/users', function (Group $group) {
-        $group->get('/{field}/{id}/{fieldValue}', FeildContrastUsersAction::class);
+        $group->get('/{field}/{id}/{fieldValue}', ContrastFeildUsersAction::class);
     });
 };

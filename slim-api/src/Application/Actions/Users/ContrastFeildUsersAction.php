@@ -5,7 +5,7 @@ namespace App\Application\Actions\Users;
 
 use Psr\Http\Message\ResponseInterface as Response;
 
-class FeildContrastUsersAction extends UsersAction
+class ContrastFeildUsersAction extends UsersAction
 {
     /**
      * {@inheritdoc}

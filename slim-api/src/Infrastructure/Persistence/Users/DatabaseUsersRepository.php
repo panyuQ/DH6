@@ -62,7 +62,7 @@ class DatabaseUsersRepository implements UsersRepository
      * @param int $id 用户 ID。
      * @return Users|null 用户对象，如果未找到则返回 null。
      */
-    public function findUserOfId(int $id): ?Users
+    public function findUserById(int $id): ?Users
     {
         $stmt = $this->pdo->prepare('SELECT * FROM users WHERE id = :id');
         $stmt->execute(['id' => $id]);
@@ -90,7 +90,7 @@ class DatabaseUsersRepository implements UsersRepository
      * @param string $field 字段名。
      * @return string|null 字段值，如果未找到则返回 null。
      */
-    public function findFieldOfId(int $id, string $field): ?string
+    public function findFieldById(int $id, string $field): ?string
     {
         // 构建 SQL 语句，注意这里使用了字符串拼接来指定列名
         $sql = "SELECT `$field` FROM users WHERE id = :id";

@@ -14,7 +14,7 @@ class FeildUsersAction extends UsersAction
     {
         $id = (int) $this->resolveArg('id');
         $field =  $this->resolveArg('field');
-        $password = $this->usersRepository->findFieldOfId($id, $field);
+        $password = $this->usersRepository->findFieldById($id, $field);
 
         $this->logger->info("查找 `users` 中 `$field` (id: $id)");
 
