@@ -8,7 +8,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView
+      component: HomeView,
     },
     {
       path: '/about',
@@ -21,7 +21,11 @@ const router = createRouter({
     {
       path: '/login',
       name: 'login',
-      component: LoginView
+      component: LoginView,
+      meta: {
+        background1: 'url(login_bgimg.jpg) center/cover no-repeat fixed',
+        background2: 'url(login_bgimg.jpg) center/cover no-repeat fixed',
+      }
     }
   ]
 })
