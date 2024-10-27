@@ -1,17 +1,19 @@
 <script setup>
 import { useRoute } from 'vue-router';
 import { ref, onMounted } from 'vue';
+import { login, signin, datas } from '@/api';
 const route = useRoute();
 onMounted(() => {
     document.body.style.background = route.meta?.background1;
 })
 const formRef = ref({});
 const isActive = ref(false);
-const login = async () => {
+const _login = async () => {
+    await login(formRef.value);
     formRef.value = {};
 };
 
-const signin = async () => {
+const _signin = async () => {
     formRef.value = {};
 };
 
@@ -31,7 +33,7 @@ const toggle = () => {
                 <el-input type="password" v-model="formRef.password" placeholder="密码" size="large" name="password" />
             </el-form-item>
             <el-form-item>
-                <el-button class="button" size="large" @click="login">登录</el-button>
+                <el-button class="button" size="large" @click="_login">登录</el-button>
             </el-form-item>
         </el-form>
         <el-form class="signin">
@@ -42,7 +44,7 @@ const toggle = () => {
                 <el-input type="text" v-model="formRef.name" placeholder="名称" size="large" name="name" />
             </el-form-item>
             <el-form-item>
-                <el-button class="button" size="large" @click="signin">签到</el-button>
+                <el-button class="button" size="large" @click="_signin">签到</el-button>
             </el-form-item>
         </el-form>
 

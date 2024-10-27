@@ -42,16 +42,38 @@ const get = async (url) => {
     }
 };
 
+const post = async (url, data) => {
+    try {
+        const response = await axios.post(url, data);
+        const { statusCode, data: responseData } = response.data;
+        if (statusCode !== 200) {
+            throw new Error(responseData);
+        }
+        return responseData;
+    } catch (error) {
+        throw error;
+    }
+};
+
 const fetchData = async (key, url, data = null) => {
     try {
         if (data) {
+            DATAS.value[key] = await post(url, data);
         } else {
             DATAS.value[key] = await get(url);
         }
     } catch (error) {
-        console.error(`方法 ${key} 运行时出错:`, error);
-        ElMessage.error(`方法 ${key} 运行时出错: ${error.message}`);
+        console.error(`API方法 ${key} 运行时出错:`, error);
+        ElMessage.error(`API方法 ${key} 运行时出错: ${error.message}`);
     }
+};
+
+export const login = async (data) => {
+    await fetchData('login', `${API_URL}/login`, data);
+};
+
+export const signin = async (data) => {
+    await fetchData('signin', `${API_URL}/signin`, data);
 };
 
 /**
