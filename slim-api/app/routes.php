@@ -11,22 +11,28 @@ use Slim\App;
 use Slim\Interfaces\RouteCollectorProxyInterface as Group;
 
 return function (App $app) {
+    // CORS 预检 OPTIONS 请求处理
     $app->options('/{routes:.*}', function (Request $request, Response $response) {
-        // CORS Pre-Flight OPTIONS Request Handler
-        return $response;
+        return $response
+            ->withHeader('Access-Control-Allow-Origin', '*')
+            ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+            ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     });
 
     $app->get('/', function (Request $request, Response $response) {
         $response->getBody()->write('DH6 API');
         return $response;
     });
-
-    $app->group('/users', function (Group $group) {
+        
+    // 获取信息 相关路由
+    $app->group('/get/users', function (Group $group) {
         $group->get('', AllUsersAction::class);
         $group->get('/{id}', UserUsersAction::class);
         $group->get('/{field}/{id}', FeildUsersAction::class);
-        $group->get('/{field}/{id}/{fieldValue}', FeildContrastUsersAction::class);
-        
     });
-    
+
+    // 对比信息 相关路由
+    $app->group('/contrast/users', function (Group $group) {
+        $group->get('/{field}/{id}/{fieldValue}', FeildContrastUsersAction::class);
+    });
 };
