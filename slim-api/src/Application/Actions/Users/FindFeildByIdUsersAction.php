@@ -5,7 +5,7 @@ namespace App\Application\Actions\Users;
 
 use Psr\Http\Message\ResponseInterface as Response;
 
-class FeildUsersAction extends UsersAction
+class FindFeildByIdUsersAction extends UsersAction
 {
     /**
      * {@inheritdoc}
