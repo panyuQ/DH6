@@ -6,7 +6,7 @@ findAll_users();
 
 const formRef = ref({});
 const login = async () => {
-    ElMessage('login: '+ formRef.value);
+    ElMessage('login: ' + formRef.value);
     formRef.value = {};
 }
 
@@ -19,6 +19,7 @@ const signin = async () => {
 
 <template>
     <el-card class="container" body-class="form-box">
+        <p>{{ datas() }}</p>
         <el-form class="login">
             <el-form-item>
                 <el-input type="text" v-model="formRef.username" placeholder="账号" size="large" name="username" />
@@ -50,6 +51,7 @@ const signin = async () => {
     width: 40%;
     max-width: 800px;
     height: 40%;
+    min-height: 245px;
     max-height: 320px;
     top: 50%;
     left: 50%;

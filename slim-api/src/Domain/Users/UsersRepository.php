@@ -17,7 +17,7 @@ interface UsersRepository
      */
     public function findUserById(int $id): ?Users;
 
-    public function findFieldById(int $id, string $field): ?string;
+    public function findFieldById(int $id, string $field);
 
-    public function fieldContrast(int $id, string $field, string $fieldValue): ?bool;
+    public function contrastField(int $id, string $field, string $fieldValue): bool;
 }

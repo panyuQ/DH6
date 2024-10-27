@@ -88,21 +88,19 @@ class DatabaseUsersRepository implements UsersRepository
      *
      * @param int $id 用户 ID。
      * @param string $field 字段名。
-     * @return string|null 字段值，如果未找到则返回 null。
+     * @return string|int|null 字段值，如果未找到则返回 null。
      */
-    public function findFieldById(int $id, string $field): ?string
+    public function findFieldById(int $id, string $field)
     {
-        // 构建 SQL 语句，注意这里使用了字符串拼接来指定列名
         $sql = "SELECT `$field` FROM users WHERE id = :id";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute(['id' => $id]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        // 返回结果
         return $row ? $row[$field] : null;
     }
 
-    public function fieldContrast(int $id, string $field, string $fieldValue): bool
+    public function contrastField(int $id, string $field, string $fieldValue): bool
     {
         // 查询用户字段值
         $sql = "SELECT `$field` FROM users WHERE id = :id AND `$field` = :fieldValue";
@@ -118,6 +116,5 @@ class DatabaseUsersRepository implements UsersRepository
         }
 
         return false;
-
     }
 }

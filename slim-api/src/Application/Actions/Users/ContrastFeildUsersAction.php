@@ -15,7 +15,7 @@ class ContrastFeildUsersAction extends UsersAction
         $id = (int) $this->resolveArg('id');
         $field =  $this->resolveArg('field');
         $fieldValue =  $this->resolveArg('fieldValue');
-        $res = $this->usersRepository->fieldContrast($id, $field, $fieldValue);
+        $res = $this->usersRepository->contrastField($id, $field, $fieldValue);
 
         $this->logger->info("对比 `users` 中 `$field` (id: $id, $field: $fieldValue)");
 
