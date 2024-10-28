@@ -18,7 +18,8 @@ class ContrastFeildUsersAction extends UsersAction
         $result = $this->usersRepository->contrastField($id, $field, $fieldValue);
         $x = $field == 'password' ? '校验' : '对比';
         $message = $result ? `${x}成功` : `${x}失败`;
-        $this->logger->info("对比 `users` 的 `$field` (id: $id, $field: $fieldValue)");
+        
+        $this->logger->info("对比数据[".$result."] `users`-`${field}` (id: ${id}, ${field}: ${fieldValue})");
 
         return $this->respondWithData(['result' => $result, 'message' => $message]);
     }

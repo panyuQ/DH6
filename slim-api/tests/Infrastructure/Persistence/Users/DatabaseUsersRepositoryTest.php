@@ -31,8 +31,8 @@ class DatabaseUsersRepositoryTest extends TestCase
     public function testFindAllReturnsArrayOfUsers(): void
     {
         $expectedUsers = [
-            ['id' => 1, 'name' => 'John Doe', 'user_type' => 1, 'username' => 'johndoe', 'password' => 'hashed_password', 'last_ip' => '127.0.0.1', 'last_time' => '2023-10-01 12:00:00'],
-            ['id' => 2, 'name' => 'Jane Smith', 'user_type' => 2, 'username' => 'janesmith', 'password' => 'hashed_password', 'last_ip' => '127.0.0.1', 'last_time' => '2023-10-01 12:00:00']
+            ['id' => 1, 'name' => 'John Doe', 'level' => 1, 'username' => 'johndoe', 'password' => 'hashed_password', 'last_ip' => '127.0.0.1', 'last_time' => '2023-10-01 12:00:00'],
+            ['id' => 2, 'name' => 'Jane Smith', 'level' => 2, 'username' => 'janesmith', 'password' => 'hashed_password', 'last_ip' => '127.0.0.1', 'last_time' => '2023-10-01 12:00:00']
         ];
 
         $this->stmt->expects($this->once())
@@ -52,7 +52,7 @@ class DatabaseUsersRepositoryTest extends TestCase
 
     public function testFindUserOfIdReturnsUser(): void
     {
-        $expectedUser = ['id' => 1, 'name' => 'John Doe', 'user_type' => 1, 'username' => 'johndoe', 'password' => 'hashed_password', 'last_ip' => '127.0.0.1', 'last_time' => '2023-10-01 12:00:00'];
+        $expectedUser = ['id' => 1, 'name' => 'John Doe', 'level' => 1, 'username' => 'johndoe', 'password' => 'hashed_password', 'last_ip' => '127.0.0.1', 'last_time' => '2023-10-01 12:00:00'];
 
         $this->stmt->expects($this->once())
             ->method('execute')

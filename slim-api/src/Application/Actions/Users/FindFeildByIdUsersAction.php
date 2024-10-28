@@ -16,7 +16,7 @@ class FindFeildByIdUsersAction extends UsersAction
         $field =  $this->resolveArg('field');
         $password = $this->usersRepository->findFieldById($id, $field);
 
-        $this->logger->info("查找 `users` 的 `$field` (id: $id)");
+        $this->logger->info("查找数据 `users`-`${field}` (id: ${id})");
 
         return $this->respondWithData($password);
     }

@@ -21,7 +21,7 @@ class Users implements JsonSerializable
     /**
      * @var int
      */
-    private $user_type;
+    private $level;
 
     /**
      * @var string
@@ -48,7 +48,7 @@ class Users implements JsonSerializable
      *
      * @param int  $id
      * @param string|null  $name
-     * @param int       $user_type
+     * @param int       $level
      * @param string    $username
      * @param string    $password
      * @param string|null  $last_ip
@@ -59,13 +59,13 @@ class Users implements JsonSerializable
         string $username,
         string $password,
         string|null $name = null,
-        int $user_type = 0,
+        int $level = 0,
         string|null $last_ip = null,
         DateTime|string|null $last_time = null
     ) {
         $this->id = $id;
         $this->name = $name;
-        $this->user_type = $user_type;
+        $this->level = $level;
         $this->username = $username;
         $this->password = $password;
         $this->last_ip = $last_ip;
@@ -121,20 +121,20 @@ class Users implements JsonSerializable
      *
      * @return int
      */
-    public function getUserType(): int
+    public function getLevel(): int
     {
-        return $this->user_type;
+        return $this->level;
     }
 
     /**
      * 设置用户类型
      *
-     * @param int $user_type
+     * @param int $level
      * @return self
      */
-    public function setUserType(int $user_type): self
+    public function setLevel(int $level): self
     {
-        $this->user_type = $user_type;
+        $this->level = $level;
         return $this;
     }
 
@@ -243,7 +243,7 @@ class Users implements JsonSerializable
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'user_type' => $this->user_type,
+            'level' => $this->level,
             'username' => $this->username,
             'password' => $this->password,
             'last_ip' => $this->last_ip,

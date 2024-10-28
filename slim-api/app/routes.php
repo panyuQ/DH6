@@ -7,6 +7,7 @@ use App\Application\Actions\Users\FindFeildByIdUsersAction;
 use App\Application\Actions\Users\ContrastFeildUsersAction;
 use App\Application\Actions\Users\Other\LoginAction;
 use App\Application\Actions\LogsSignin\FindAllLogsSigninAction;
+use App\Application\Middleware\ApiAuthMiddleware;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\App;
@@ -18,10 +19,12 @@ return function (App $app) {
         return $response
             ->withHeader('Access-Control-Allow-Origin', '*')
             ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
-            ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+            ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+            ->withHeader('Access-Control-Allow-Credentials', 'true');
     });
+    
 
-    $app->get('/', function (Request $request, Response $response) {
+    $app->get('/', function (Request $request, Response $response)  {
         $response->getBody()->write('DH6 API');
         return $response;
     });
@@ -40,7 +43,8 @@ return function (App $app) {
         $group->get('', FindAllUsersAction::class);
         $group->get('/{id}', FindOneByIdUsersAction::class);
         $group->get('/{field}/{id}', FindFeildByIdUsersAction::class);
-    });
+    })->add(ApiAuthMiddleware::class);
+    
     $app->group('/find/logs_signin', function (Group $group) {
         $group->get('', FindAllLogsSigninAction::class);
     });

@@ -21,7 +21,7 @@ class LogsSignin implements JsonSerializable
     /**
      * @var int
      */
-    private $user_type;
+    private $level;
 
     /**
      * @var string|null
@@ -38,20 +38,20 @@ class LogsSignin implements JsonSerializable
      *
      * @param int|null  $id
      * @param string|null  $name
-     * @param int       $user_type
+     * @param int       $level
      * @param string|null  $ip
      * @param DateTime|null  $time
      */
     public function __construct(
         int $id = null,
         ?string $name = null,
-        int $user_type = 0,
+        int $level = 0,
         ?string $ip = null,
         DateTime|string|null $time = null
     ) {
         $this->id = $id;
         $this->name = $name;
-        $this->user_type = $user_type;
+        $this->level = $level;
         $this->ip = $ip;
         $this->setTime($time);
     }
@@ -105,20 +105,20 @@ class LogsSignin implements JsonSerializable
      *
      * @return int
      */
-    public function getUserType(): int
+    public function getLevel(): int
     {
-        return $this->user_type;
+        return $this->level;
     }
 
     /**
      * 设置用户类型
      *
-     * @param int $user_type
+     * @param int $level
      * @return self
      */
-    public function setUserType(int $user_type): self
+    public function setLevel(int $level): self
     {
-        $this->user_type = $user_type;
+        $this->level = $level;
         return $this;
     }
     /**
@@ -182,7 +182,7 @@ class LogsSignin implements JsonSerializable
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'user_type' => $this->user_type,
+            'level' => $this->level,
             'ip' => $this->ip,
             'time' => $this->time ? $this->time->format('Y-m-d H:i:s') : null,
         ];

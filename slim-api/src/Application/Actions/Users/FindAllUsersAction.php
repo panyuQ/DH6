@@ -14,7 +14,7 @@ class FindAllUsersAction extends UsersAction
     {
         $users = $this->usersRepository->findAll();
 
-        $this->logger->info("展示 `users`");
+        $this->logger->info("查找数据 `users`-`*`");
 
         return $this->respondWithData($users);
     }

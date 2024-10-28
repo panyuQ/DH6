@@ -64,12 +64,12 @@ onBeforeUnmount(() => {
 const gogogo = async (func) => {
   const res = await func({ ...formRef.value });
 
-  if (res.value.result) {
-    ElMessage.success(res.value.message);
+  if (res.result) {
+    ElMessage.success(res.message);
     formRef.value = {};
     return true;
   } else {
-    ElMessage.error(res.value.message);
+    ElMessage.error(res.message);
     return false;
   }
 };

@@ -7,7 +7,6 @@ use DI\ContainerBuilder;
 use Monolog\Logger;
 
 return function (ContainerBuilder $containerBuilder) {
-
     // 全局设置对象
     $containerBuilder->addDefinitions([
         SettingsInterface::class => function () {
@@ -17,6 +16,7 @@ return function (ContainerBuilder $containerBuilder) {
                 'logErrorDetails' => false,
                 'logger' => [
                     'name' => 'slim-app',
+                    // 日志文件路径
                     'path' => isset($_ENV['docker']) ? 'php://stdout' : __DIR__ . '/../logs/app.log',
                     'level' => Logger::DEBUG,
                 ],
@@ -34,6 +34,10 @@ return function (ContainerBuilder $containerBuilder) {
                         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
                         PDO::ATTR_EMULATE_PREPARES => false,
                     ],
+                ],
+                // API 权重 （与用户等级对应）
+                'apiLevel'=> [
+                    '/find/users.*' => 2,
                 ],
             ]);
         }

@@ -19,16 +19,26 @@ class LoginAction extends UsersAction
         $user = $this->usersRepository->findUserByUsernameAndPassword($username, $password);
 
         if ($user) {
-            // 开启会话
-            session_start();
+            // 检查会话是否已经启动
+            if (session_status() == PHP_SESSION_NONE) {
+                session_start();
+            }
+            $id = $user->getId();
+            $name = $user->getName();
+            $level = $user->getLevel();
             // 将用户信息存储在会话中
             $_SESSION['user'] = [
-                'id' => $user->getId(),
-                'user_type' => $user->getUserType(),
+                'id' => $id,
+                'name' => $name,
+                'level' => $level,
             ];
+            $this->logger->info("用户-$id `$name` 登录");
+            $this->request->withAttribute('session', $_SESSION);
             return $this->respondWithData(['result' => true, 'message' => '登录成功']);
         } else {
+            $this->logger->error();
             return $this->respondWithData(['result' => false, 'message' => '登录失败']);
         }
     }
+    
 }

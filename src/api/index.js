@@ -1,8 +1,9 @@
 // @/api/index.js
 import axios from 'axios';
 import { ElMessage } from 'element-plus';
-import { ref } from 'vue';
 import CryptoJS from 'crypto-js';
+
+axios.defaults.withCredentials = true;
 
 const API_URL = 'http://localhost:8081'; // 替换为你的 API 端点
 
@@ -33,17 +34,18 @@ const post = async (url, data) => {
 };
 
 const fetchData = async (key, url, data = null) => {
-    const res = ref(null);
+    let res = null;
     try {
         if (data) {
-            res.value = await post(url, data);
+            res = await post(url, data);
         } else {
-            res.value = await get(url);
+            res = await get(url);
         }
     } catch (error) {
         console.error(`API方法 ${key} 运行时出错:`, error);
-        ElMessage.error(`API方法 ${key} 运行时出错: ${error.message}`);
+        ElMessage.error(`API 请求出错: ${error.message}`);
     }
+    console.log(`API 返回数据:`, res);
     return res;
 };
 

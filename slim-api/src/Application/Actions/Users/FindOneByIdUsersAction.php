@@ -15,7 +15,7 @@ class FindOneByIdUsersAction extends UsersAction
         $id = (int) $this->resolveArg('id');
         $user = $this->usersRepository->findUserById($id);
 
-        $this->logger->info("查找 `users` (id: $id)");
+        $this->logger->info("查找数据 `users`-`*` (id: ${id})");
 
         return $this->respondWithData($user);
     }

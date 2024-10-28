@@ -45,7 +45,7 @@ class DatabaseLogsSigninRepository implements LogsSigninRepository
             $users[] = new LogsSignin(
                 (int) $row['id'],
                 $row['name'],
-                (int) $row['user_type'],
+                (int) $row['level'],
                 $row['ip'],
                 $row['time']
             );

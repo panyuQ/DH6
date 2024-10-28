@@ -42,7 +42,7 @@ class UsersTest extends TestCase
 
         $this->assertEquals($id, $user->getId());
         $this->assertEquals($username, $user->getUsername());
-        $this->assertEquals(1, $user->getUserType());
+        $this->assertEquals(1, $user->getLevel());
         $this->assertEquals($password, $user->getPassword());
         $this->assertEquals($lastIp, $user->getLastIp());
         $this->assertEquals($lastTime, $user->getLastTime());
@@ -67,7 +67,7 @@ class UsersTest extends TestCase
         $expectedPayload = json_encode([
             'id' => $id,
             'name' => $firstName . ' ' . $lastName,
-            'user_type' => 1,
+            'level' => 1,
             'username' => $username,
             'password' => $password,
             'last_ip' => $lastIp,

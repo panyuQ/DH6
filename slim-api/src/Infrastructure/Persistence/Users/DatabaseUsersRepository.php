@@ -47,7 +47,7 @@ class DatabaseUsersRepository implements UsersRepository
                 $row['username'],
                 $row['password'],
                 $row['name'],
-                (int) $row['user_type'],
+                (int) $row['level'],
                 $row['last_ip'],
                 $row['last_time']
             );
@@ -74,7 +74,7 @@ class DatabaseUsersRepository implements UsersRepository
                 $row['username'],
                 $row['password'],
                 $row['name'],
-                (int) $row['user_type'],
+                (int) $row['level'],
                 $row['last_ip'],
                 $row['last_time']
             );
@@ -95,7 +95,7 @@ class DatabaseUsersRepository implements UsersRepository
                 $row['username'],
                 $row['password'],
                 $row['name'],
-                (int) $row['user_type'],
+                (int) $row['level'],
                 $row['last_ip'],
                 $row['last_time']
             );
