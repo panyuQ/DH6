@@ -24,6 +24,7 @@ class LoginAction extends UsersAction
             // 将用户信息存储在会话中
             $_SESSION['user'] = [
                 'id' => $user->getId(),
+                'user_type' => $user->getUserType(),
             ];
             return $this->respondWithData(['result' => true, 'message' => '登录成功']);
         } else {

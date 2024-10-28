@@ -30,7 +30,7 @@ return function (App $app) {
         $group->post('', LoginAction::class) ;
     });
 
-    $app->group('//signin', function (Group $group) {
+    $app->group('/signin', function (Group $group) {
         $group->post('', LoginAction::class) ;
     });
     
