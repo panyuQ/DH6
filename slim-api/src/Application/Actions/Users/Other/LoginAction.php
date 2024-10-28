@@ -22,7 +22,7 @@ class LoginAction extends UsersAction
             // 检查会话是否已经启动
             if (session_status() == PHP_SESSION_NONE) {
                 session_start();
-            }
+            }   
             $id = $user->getId();
             $name = $user->getName();
             $level = $user->getLevel();
@@ -36,7 +36,6 @@ class LoginAction extends UsersAction
             $this->request->withAttribute('session', $_SESSION);
             return $this->respondWithData(['result' => true, 'message' => '登录成功']);
         } else {
-            $this->logger->error();
             return $this->respondWithData(['result' => false, 'message' => '登录失败']);
         }
     }

@@ -6,8 +6,8 @@ use App\Application\Actions\Users\FindOneByIdUsersAction;
 use App\Application\Actions\Users\FindFeildByIdUsersAction;
 use App\Application\Actions\Users\ContrastFeildUsersAction;
 use App\Application\Actions\Users\Other\LoginAction;
+use App\Application\Actions\Users\Other\LoginStatusAction;
 use App\Application\Actions\LogsSignin\FindAllLogsSigninAction;
-use App\Application\Middleware\ApiAuthMiddleware;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\App;
@@ -16,40 +16,46 @@ use Slim\Interfaces\RouteCollectorProxyInterface as Group;
 return function (App $app) {
     // CORS 预检 OPTIONS 请求处理
     $app->options('/{routes:.*}', function (Request $request, Response $response) {
+
         return $response
             ->withHeader('Access-Control-Allow-Origin', '*')
             ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
             ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
             ->withHeader('Access-Control-Allow-Credentials', 'true');
     });
-    
 
-    $app->get('/', function (Request $request, Response $response)  {
-        $response->getBody()->write('DH6 API');
+    // 根路由
+    $app->get('/', function (Request $request, Response $response) {
+        $response->getBody()->write('DH6 API Server');
         return $response;
     });
 
+    // 登录状态检查
+
+    // 登录相关路由
     $app->group('/login', function (Group $group) {
-        $group->post('', LoginAction::class) ;
+        $group->post('', LoginAction::class);
+        $group->get('/status', LoginStatusAction::class);
     });
 
+    // 签到相关路由
     $app->group('/signin', function (Group $group) {
-        $group->post('', LoginAction::class) ;
+        $group->post('', LoginAction::class);
     });
-    
 
-    // 查找信息 相关路由
+    // 用户信息查找相关路由
     $app->group('/find/users', function (Group $group) {
         $group->get('', FindAllUsersAction::class);
         $group->get('/{id}', FindOneByIdUsersAction::class);
         $group->get('/{field}/{id}', FindFeildByIdUsersAction::class);
-    })->add(ApiAuthMiddleware::class);
-    
+    });
+
+    // 签到日志查找相关路由
     $app->group('/find/logs_signin', function (Group $group) {
         $group->get('', FindAllLogsSigninAction::class);
     });
 
-    // 对比信息 相关路由
+    // 用户信息对比相关路由
     $app->group('/contrast/users', function (Group $group) {
         $group->get('/{field}/{id}/{fieldValue}', ContrastFeildUsersAction::class);
     });

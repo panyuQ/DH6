@@ -13,9 +13,9 @@ return function (ContainerBuilder $containerBuilder) {
             return new Settings([
                 'displayErrorDetails' => true, // 在生产环境中应设置为 false
                 'logError' => false,
-                'logErrorDetails' => false,
+                'logErrorDetails' => false, 
                 'logger' => [
-                    'name' => 'slim-app',
+                    'name' => 'DH6-API',
                     // 日志文件路径
                     'path' => isset($_ENV['docker']) ? 'php://stdout' : __DIR__ . '/../logs/app.log',
                     'level' => Logger::DEBUG,
