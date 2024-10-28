@@ -12,30 +12,30 @@
 
 ## 项目推荐环境
 
-### PHP ~8.0.9
+### 前端（Node.js, Vue.js）
+
+#### Node.js ~20.11.0
+
+#### npm ~10.2.4
+
+### 后端（PHP, Slim4）
+
+#### PHP ~8.0.9
 
 需要的扩展: curl, mbstring, pdo_mysql
 
-### Composer ~2.7.2
-
-### Node.js ~20.11.0
-
-### npm ~10.2.4
+#### Composer ~2.7.2
 
 ## 项目运行
 
+启动前运行
+
 ```sh
 npm install
+cd slim-api/
+composer install
 ```
 
-### 开发环境下的编译和热重载
+### 一键运行脚本（可以更改其中端口号）
 
-```sh
-npm run dev
-```
-
-### 生产环境下的编译和压缩
-
-```sh
-npm run build
-```
+脚本在根目录, 文件名称格式: `start-XXX-release.XX`
