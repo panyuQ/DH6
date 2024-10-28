@@ -55,5 +55,7 @@
     "scripts": {
         "start": "php -S localhost:8080 -t public",
         "test": "phpunit"
-    }
+    },
+    "minimum-stability": "stable", 
+    "prefer-stable": true
 }

@@ -6,6 +6,7 @@ use App\Application\Actions\Users\FindOneByIdUsersAction;
 use App\Application\Actions\Users\FindFeildByIdUsersAction;
 use App\Application\Actions\Users\ContrastFeildUsersAction;
 use App\Application\Actions\Users\Other\LoginAction;
+use App\Application\Actions\LogsSignin\FindAllLogsSigninAction;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\App;
@@ -29,11 +30,19 @@ return function (App $app) {
         $group->post('', LoginAction::class) ;
     });
 
+    $app->group('//signin', function (Group $group) {
+        $group->post('', LoginAction::class) ;
+    });
+    
+
     // 查找信息 相关路由
     $app->group('/find/users', function (Group $group) {
         $group->get('', FindAllUsersAction::class);
         $group->get('/{id}', FindOneByIdUsersAction::class);
         $group->get('/{field}/{id}', FindFeildByIdUsersAction::class);
+    });
+    $app->group('/find/logs_signin', function (Group $group) {
+        $group->get('', FindAllLogsSigninAction::class);
     });
 
     // 对比信息 相关路由

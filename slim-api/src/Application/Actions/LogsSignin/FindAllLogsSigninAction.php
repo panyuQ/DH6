@@ -1,20 +1,20 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Application\Actions\Users;
+namespace App\Application\Actions\LogsSignin;
 
 use Psr\Http\Message\ResponseInterface as Response;
 
-class FindAllUsersAction extends UsersAction
+class FindAllLogsSigninAction extends LogsSigninAction
 {
     /**
      * {@inheritdoc}
      */
     protected function action(): Response
     {
-        $users = $this->usersRepository->findAll();
+        $users = $this->logsSigninRepository->findAll();
 
-        $this->logger->info("展示 `users`");
+        $this->logger->info("展示 `logs_signin`");
 
         return $this->respondWithData($users);
     }

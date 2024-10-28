@@ -13,6 +13,21 @@ class LoginAction extends UsersAction
      */
     protected function action(): Response
     {
-        return $this->respondWithData(['message' => '!!!!!!']);
+        $formData = $this->getFormData();
+        $username = $formData->username ?? '';
+        $password = $formData->password ?? '';
+        $user = $this->usersRepository->findUserByUsernameAndPassword($username, $password);
+
+        if ($user) {
+            // 开启会话
+            session_start();
+            // 将用户信息存储在会话中
+            $_SESSION['user'] = [
+                'id' => $user->getId(),
+            ];
+            return $this->respondWithData(['result' => true, 'message' => '登录成功']);
+        } else {
+            return $this->respondWithData(['result' => false, 'message' => '登录失败']);
+        }
     }
 }

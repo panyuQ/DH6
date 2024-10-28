@@ -44,10 +44,10 @@ class DatabaseUsersRepository implements UsersRepository
         foreach ($rows as $row) {
             $users[] = new Users(
                 (int) $row['id'],
-                $row['name'],
-                (int) $row['user_type'],
                 $row['username'],
                 $row['password'],
+                $row['name'],
+                (int) $row['user_type'],
                 $row['last_ip'],
                 $row['last_time']
             );
@@ -71,10 +71,31 @@ class DatabaseUsersRepository implements UsersRepository
         if ($row) {
             return new Users(
                 (int) $row['id'],
-                $row['name'],
-                (int) $row['user_type'],
                 $row['username'],
                 $row['password'],
+                $row['name'],
+                (int) $row['user_type'],
+                $row['last_ip'],
+                $row['last_time']
+            );
+        }
+
+        return null;
+    }
+
+    public function findUserByUsernameAndPassword(string $username, string $password): ?Users
+    {
+        $stmt = $this->pdo->prepare('SELECT * FROM users WHERE username = :username and password = :password');
+        $stmt->execute(['username' => $username, 'password' => $password]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($row) {
+            return new Users(
+                (int) $row['id'],
+                $row['username'],
+                $row['password'],
+                $row['name'],
+                (int) $row['user_type'],
                 $row['last_ip'],
                 $row['last_time']
             );

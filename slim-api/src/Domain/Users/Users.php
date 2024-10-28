@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Users;
 
+use DateTime;
 use JsonSerializable;
 
 class Users implements JsonSerializable
@@ -45,22 +46,22 @@ class Users implements JsonSerializable
     /**
      * 构造函数
      *
-     * @param int|null  $id
+     * @param int  $id
      * @param string|null  $name
      * @param int       $user_type
      * @param string    $username
      * @param string    $password
      * @param string|null  $last_ip
-     * @param \DateTime|null  $last_time
+     * @param DateTime|string|null  $last_time
      */
     public function __construct(
-        int $id = null,
-        ?string $name = null,
-        int $user_type = 0,
+        int $id,
         string $username,
         string $password,
-        ?string $last_ip = null,
-        ?\DateTime $last_time = null
+        string|null $name = null,
+        int $user_type = 0,
+        string|null $last_ip = null,
+        DateTime|string|null $last_time = null
     ) {
         $this->id = $id;
         $this->name = $name;
@@ -68,7 +69,7 @@ class Users implements JsonSerializable
         $this->username = $username;
         $this->password = $password;
         $this->last_ip = $last_ip;
-        $this->last_time = $last_time;
+        $this->setLastTime($last_time);
     }
 
     /**
@@ -206,9 +207,9 @@ class Users implements JsonSerializable
     /**
      * 获取最后记录时间
      *
-     * @return \DateTime|null
+     * @return DateTime|null
      */
-    public function getLastTime(): ?\DateTime
+    public function getLastTime(): ?DateTime
     {
         return $this->last_time;
     }
@@ -216,11 +217,18 @@ class Users implements JsonSerializable
     /**
      * 设置最后记录时间
      *
-     * @param \DateTime|null $last_time
+     * @param DateTime|string|null $last_time
      * @return self
      */
-    public function setLastTime(?\DateTime $last_time): self
+    public function setLastTime($last_time): self
     {
+        if (is_null($last_time)) {
+            $last_time = new DateTime();
+        } else if (is_string($last_time)) {
+            $last_time = new DateTime($last_time);
+        } else if (!($last_time instanceof DateTime)) {
+            throw new \InvalidArgumentException('无效数值 `last_time`');
+        }
         $this->last_time = $last_time;
         return $this;
     }

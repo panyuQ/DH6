@@ -77,7 +77,7 @@ abstract class Action
         $input = json_decode(file_get_contents('php://input'));
 
         if (json_last_error() !== JSON_ERROR_NONE) {
-            throw new HttpBadRequestException($this->request, 'Malformed JSON input.');
+            throw new HttpBadRequestException($this->request, '格式错误的 JSON 输入.');
         }
 
         return $input;
@@ -91,7 +91,7 @@ abstract class Action
     protected function resolveArg(string $name)
     {
         if (!isset($this->args[$name])) {
-            throw new HttpBadRequestException($this->request, "Could not resolve argument `{$name}`.");
+            throw new HttpBadRequestException($this->request, "无法解析参数 `{$name}`.");
         }
 
         return $this->args[$name];

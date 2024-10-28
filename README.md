@@ -10,7 +10,19 @@
 
 参见 [Vite 配置参考](https://vite.dev/config/)。
 
-## 项目设置
+## 项目推荐环境
+
+### PHP ~8.0.9
+
+需要的扩展: curl, mbstring, pdo_mysql
+
+### Composer ~2.7.2
+
+### Node.js ~20.11.0
+
+### npm ~10.2.4
+
+## 项目运行
 
 ```sh
 npm install

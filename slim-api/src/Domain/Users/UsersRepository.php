@@ -16,8 +16,12 @@ interface UsersRepository
      * @throws UsersNotFoundException
      */
     public function findUserById(int $id): ?Users;
+    
+    public function findUserByUsernameAndPassword(string $username, string $password): ?Users;
 
     public function findFieldById(int $id, string $field);
 
     public function contrastField(int $id, string $field, string $fieldValue): bool;
+    
+    
 }
