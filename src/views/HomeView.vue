@@ -1,14 +1,14 @@
 <script setup>
 import { ref, onMounted } from 'vue';
-import { isLogin } from '@/api';
-const loginStatus = ref(null);
+import { loginStatus } from '@/api';
+const status = ref(null);
 onMounted(async () => {
-    loginStatus.value = await isLogin();
+    status.value = await loginStatus();
 });
 </script>
 
 <template>
     <div>
-        <p>{{ loginStatus }}</p>
+        <p>{{ status }}</p>
     </div>
 </template>

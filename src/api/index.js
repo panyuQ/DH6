@@ -61,7 +61,7 @@ export const login = async (data) => {
     return await fetchData('login', `${API_URL}/login`, data);
 };
 export const loginStatus = async () => {
-    return await fetchData('isLogin', `${API_URL}/login/status`);
+    return await fetchData('loginStatus', `${API_URL}/login/status`);
 }
 
 export const signin = async (data) => {
