@@ -90,7 +90,7 @@ const handleSignin = async () => {
     await signinFormRef.value.validate();
     gogogo(signin);
   } catch (error) {
-    ElMessage.error('请正确填写 ID（学号）或名称');
+    ElMessage.error('请正确填写 ID或名称');
   }
 };
 
