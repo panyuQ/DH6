@@ -18,14 +18,19 @@ class LoginStatusAction extends UsersAction
             session_start();
         }
         $session = $_SESSION;
-        $res = isset($session['user']) && isset($session['user']['level']) && $session['user']['level'] > 0;
-        $body = $res ? [
-            'id' => $session['user']['id'],
-            'name' => $session['user']['name'],
-            'level' => $session['user']['level'],
+        $res = isset($session['user']) && isset($session['user']['id']);
+        if (!$res) {
+            return $this
+                ->respondWithData(['result' => false, 'message' => '未登录']);
+        }
+        $user = $this->usersRepository->findUserById($session['user']['id']);
+        $body = [
+            'id' => $user->getId(),
+            'name' => $user->getName(),
+            'level' => $user->getLevel(),
             'result' => true,
             'message' => '已登录',
-        ] : ['result' => false, 'message' => '未登录'];
+        ];
 
         return $this->respondWithData($body);
     }

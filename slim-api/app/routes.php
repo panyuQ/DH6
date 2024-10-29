@@ -7,6 +7,7 @@ use App\Application\Actions\Users\FindFeildByIdUsersAction;
 use App\Application\Actions\Users\ContrastFeildUsersAction;
 use App\Application\Actions\Users\Other\LoginAction;
 use App\Application\Actions\Users\Other\LoginStatusAction;
+use App\Application\Actions\Users\Other\LogoutAction;
 use App\Application\Actions\LogsSignin\FindAllLogsSigninAction;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -36,6 +37,11 @@ return function (App $app) {
     $app->group('/login', function (Group $group) {
         $group->post('', LoginAction::class);
         $group->get('/status', LoginStatusAction::class);
+    });
+
+    // 退出登录
+    $app->group('/logout', function (Group $group) {
+        $group->get('', LogoutAction::class);
     });
 
     // 签到相关路由

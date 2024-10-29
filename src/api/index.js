@@ -1,6 +1,6 @@
 // @/api/index.js
 import axios from 'axios';
-const ElMessage = import('element-plus').then(module => module.ElMessage);
+import { ElMessage } from 'element-plus';
 import CryptoJS from 'crypto-js';
 
 const DEBUG = import.meta.env.DEV;
@@ -14,7 +14,7 @@ axios.interceptors.request.use(config => {
     }
     return config;
 }, error => {
-    handleError('请求拦截器: ', error);
+    handleError(error, true);
     return Promise.reject(error);
 });
 
@@ -27,7 +27,7 @@ axios.interceptors.response.use(response => {
     }
     return response.data.data;
 }, error => {
-    handleError('响应拦截器: ', error);
+    handleError(error, false);
     return Promise.reject(error);
 });
 
@@ -39,11 +39,12 @@ const post = async (url, data) => {
     return await axios.post(url, data);
 };
 
-const handleError = (key, error) => {
+const handleError = (error, request) => {
+    let x = request ? '请求' : '响应';
     if (DEBUG) {
-        console.error(`${key} 请求出错:`, error);
+        console.error(`${error.config.method.toUpperCase()} ${x}出错: ${error.config.url} \n`, error);
     }
-    ElMessage.error(`API 请求错误: ${error.message}`);
+    ElMessage.error(`${x}错误: ${error.message}`);
 };
 
 export const fetchData = async (path, data = null) => {
@@ -52,7 +53,6 @@ export const fetchData = async (path, data = null) => {
         let url = `${API_URL}${path}`;
         res = await (data ? post(url, data) : get(url));
     } catch (error) {
-        handleError(path, error);
     }
     return res;
 };
@@ -70,6 +70,9 @@ export const loginStatus = async () => {
     return await fetchData('/login/status');
 };
 
+export const logout = async () => {
+    return await fetchData('/logout');
+};
 export const signin = async (data) => {
     return await fetchData('/signin', data);
 };

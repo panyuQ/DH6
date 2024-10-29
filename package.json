@@ -12,6 +12,7 @@
     "axios": "^1.7.7",
     "crypto-js": "^4.2.0",
     "element-plus": "^2.8.6",
+    "js-cookie": "^3.0.5",
     "vue": "^3.5.12",
     "vue-router": "^4.4.5"
   },

@@ -10,7 +10,8 @@ const style = inject('PAGE_LOGIN');
 const isActive = ref(false);
 let bak = null;
 onBeforeMount(async () => {
-  if ((await loginStatus()).result) {
+  const status = await loginStatus();
+  if (status && status.result) {
     ElMessage.warning('已登录');
     router.push({ name: 'home' });
   }
