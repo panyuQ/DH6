@@ -1,9 +1,12 @@
 // @/api/index.js
 import axios from 'axios';
-import { ElMessage } from 'element-plus';
 import CryptoJS from 'crypto-js';
+const { ElMessage } = await import('element-plus');
+
+
 
 const DEBUG = import.meta.env.DEV;
+
 export const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:8081';
 
 axios.defaults.withCredentials = true;
@@ -30,11 +33,11 @@ const handleError = (error, request) => {
         console.error(`${info.type}  ${info.method}  ${info.url}`);
         console.log(`错误代码：${info.error.status}`)
         console.log(`错误名称：${info.error.name}`)
-        if (info.error.type){
+        if (info.error.type) {
             console.log(`错误类型：${info.error.type}`);
             console.log(`错误描述：${info.error.description}`);
         }
-        
+
     }
 };
 

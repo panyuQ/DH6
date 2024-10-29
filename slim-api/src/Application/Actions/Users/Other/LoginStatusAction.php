@@ -21,7 +21,7 @@ class LoginStatusAction extends UsersAction
         $res = isset($session['user']) && isset($session['user']['id']);
         if (!$res) {
             return $this
-                ->respondWithData(['result' => false, 'message' => '未登录']);
+                ->respondWithData(['result' => false]);
         }
         // 获取用户
         $user = $this->usersRepository->findUserById($session['user']['id']);
@@ -29,7 +29,7 @@ class LoginStatusAction extends UsersAction
         $this->usersRepository->updateLastTime($user->getId());
         // 更新会话ID
         $session['user']['id'] = $user->getId();
-        
+
         $body = [
             'id' => $user->getId(),
             'name' => $user->getName(),

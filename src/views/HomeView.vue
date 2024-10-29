@@ -1,14 +1,19 @@
 <script setup>
-import { ref, onMounted, onBeforeUnmount, inject } from 'vue';
+import { ref, onMounted, onBeforeUnmount, inject, reactive, watch  } from 'vue';
 import { loginStatus } from '@/api';
+import { useRouter } from 'vue-router';
 
 const speed = import.meta.env.VITE_STATUS_SPEED;
 const status = ref({});
 const asideWidth = ref(inject('PAGE_HOME').aside.width);
+const APP = inject('APP');
+const router = useRouter();
+
+
 const checkLoginStatus = async () => {
     const result = await loginStatus();
     if (!result.result) {
-        window.location.href = '/login';
+        logOut();
     } else {
         status.value = result;
     }
@@ -29,11 +34,11 @@ onMounted(() => {
 });
 
 const logOut = async () => {
-    if (status.value.result) {
+    if (status.value?.result) {
         await import('@/api').then(api => api.logout());
     }
     // 跳转到登录页面
-    window.location.href = '/login';
+    router.push({ name: 'login' })
 };
 
 const startDragging = (e) => {
@@ -51,13 +56,21 @@ const stopDragging = () => {
     document.removeEventListener('mousemove', onDragging);
     document.removeEventListener('mouseup', stopDragging);
 };
+
+const xxx = () => {
+    console.log(APP.name)
+};
+const font = reactive({
+  color: 'rgba(255, 255, 255, .15)',
+})
+
 </script>
 
 <template>
     <el-container class="container">
         <el-aside :style="{ width: asideWidth }" class="aside">
             <div class="resize-handle" @mousedown="startDragging"></div>
-            Aside
+            <div class="title">DH666 1.0.0</div>
         </el-aside>
         <el-container>
             <el-header class="header">
@@ -72,7 +85,11 @@ const stopDragging = () => {
                     </el-popconfirm>
                 </div>
             </el-header>
-            <el-main class="main">Main</el-main>
+            <el-main class="main">
+                <el-watermark class="content" :font="font" :content="[status.id+'-'+status.level, status.name]">
+                    <el-button @click="xxx">点击</el-button>
+                </el-watermark>
+            </el-main>
         </el-container>
     </el-container>
 </template>
@@ -144,7 +161,12 @@ const stopDragging = () => {
 
 .main {
     position: relative;
-    padding: 20px;
+    padding: 0;
     z-index: 1;
+}
+.main .content{
+    width: 100%;
+    height: 100%;
+    padding: 20px;
 }
 </style>
