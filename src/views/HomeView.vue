@@ -62,7 +62,7 @@ const stopDragging = () => {
             <el-header class="header">
                 <div class="status">
                     <div class="id">{{ status.id }}-{{ status.level }}</div>
-                    <el-popconfirm title="是否退出登录?" @confirm="logOut">
+                    <el-popconfirm title="是否确认注销?" @confirm="logOut">
                         <template #reference>
                             <div class="name">
                                 {{ status.name }}
