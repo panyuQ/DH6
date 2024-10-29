@@ -1,31 +1,57 @@
+<script setup>
+import { ref, onMounted, onBeforeMount, onBeforeUnmount, inject } from 'vue';
+import { ElMessage } from 'element-plus';
+import { LoginForm, SignInForm } from '@/components/Form';
+import { loginStatus } from '@/api';
+import { useRouter } from 'vue-router';
+const router = useRouter();
+
+const style = inject('PAGE_LOGIN');
+const isActive = ref(false);
+let bak = null;
+onBeforeMount(async () => {
+  if ((await loginStatus()).result) {
+    ElMessage.warning('已登录');
+    router.push({ name: 'home' });
+  }
+});
+onMounted(() => {
+  bak = document.body.style.background;
+  document.body.style.background = style?.background1;
+});
+
+onBeforeUnmount(() => {
+  document.body.style.background = bak;
+  bak = null;
+});
+
+const gogogo = async (func, data) => {
+  const res = await func({ ...data });
+
+  if (res.result) {
+    ElMessage.success(res.message);
+    data = {};
+    return true;
+  } else {
+    ElMessage.error(res.message);
+    return false;
+  }
+};
+const toggle = () => {
+  isActive.value = !isActive.value;
+};
+
+
+</script>
+
 <template>
   <el-card class="container" body-class="form-box" :class="{ 'active': isActive }">
-    <el-form class="login" :model="formRef" :rules="loginRules" ref="loginFormRef">
-      <el-form-item prop="username">
-        <el-input type="text" v-model="formRef.username" placeholder="账号" size="large" name="username" />
-      </el-form-item>
-      <el-form-item prop="password">
-        <el-input type="password" v-model="formRef.password" placeholder="密码" size="large" name="password" />
-      </el-form-item>
-      <el-form-item>
-        <el-button class="button" size="large" @click="handleLogin">登录</el-button>
-      </el-form-item>
-    </el-form>
+    <LoginForm :gogogo="gogogo" />
 
-    <el-form class="signin" :model="formRef" :rules="signinRules" ref="signinFormRef">
-      <el-form-item prop="id">
-        <el-input type="text" v-model="formRef.id" placeholder="ID（学号）" size="large" name="id" />
-      </el-form-item>
-      <el-form-item prop="name">
-        <el-input type="text" v-model="formRef.name" placeholder="名称" size="large" name="name" />
-      </el-form-item>
-      <el-form-item>
-        <el-button class="button" size="large" @click="handleSignin">签到</el-button>
-      </el-form-item>
-    </el-form>
+    <SignInForm :gogogo="gogogo" />
 
     <div class="overlay-container">
-      <div class="overlay" :style="{ background: route.meta?.background2 }">
+      <div class="overlay" :style="{ background: style?.background2 }">
         <div class="overlay-panel overlay-left">
           <el-button class="button" size="large" @click="toggle">登录</el-button>
         </div>
@@ -36,98 +62,6 @@
     </div>
   </el-card>
 </template>
-
-<script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import { ElMessage, ElForm, ElFormItem } from 'element-plus';
-import { login, signin } from '@/api';
-
-const route = useRoute();
-const router = useRouter();
-const formRef = ref({});
-const loginFormRef = ref(null);
-const signinFormRef = ref(null);
-const isActive = ref(false);
-let bak = null;
-
-onMounted(() => {
-  bak = document.body.style.background;
-  document.body.style.background = route.meta?.background1;
-});
-
-onBeforeUnmount(() => {
-  document.body.style.background = bak;
-  bak = null;
-});
-
-const gogogo = async (func) => {
-  const res = await func({ ...formRef.value });
-
-  if (res.result) {
-    ElMessage.success(res.message);
-    formRef.value = {};
-    return true;
-  } else {
-    ElMessage.error(res.message);
-    return false;
-  }
-};
-
-const handleLogin = async () => {
-  try {
-    await loginFormRef.value.validate();
-    if (await gogogo(login)) {
-      router.push({ name: 'home' });
-    }
-  } catch (error) {
-    ElMessage.error('请正确填写 账号或密码');
-  }
-};
-
-const handleSignin = async () => {
-  try {
-    await signinFormRef.value.validate();
-    gogogo(signin);
-  } catch (error) {
-    ElMessage.error('请正确填写 ID或名称');
-  }
-};
-
-const toggle = () => {
-  isActive.value = !isActive.value;
-};
-
-const loginRules = {
-  username: [
-    { required: true, message: '请输入账号', trigger: 'blur' }
-  ],
-  password: [
-    { required: true, message: '请输入密码', trigger: 'blur' }
-  ]
-};
-
-const signinRules = {
-  id: [
-    { validator: (rule, value, callback) => {
-        if (!formRef.value.id && !formRef.value.name) {
-          callback(new Error('请输入 ID（学号）'));
-        } else {
-          callback();
-        }
-      }, trigger: 'blur' }
-  ],
-  name: [
-    { validator: (rule, value, callback) => {
-        if (!formRef.value.id && !formRef.value.name) {
-          callback(new Error('请输入 名称'));
-        } else {
-          callback();
-        }
-      }, trigger: 'blur' }
-  ]
-};
-</script>
 
 <style scoped>
 .container {
@@ -243,7 +177,7 @@ const signinRules = {
   justify-content: center;
 }
 
-.button {
+:deep(.button) {
   border-radius: 20px;
   padding: 1em 3.5em;
   color: var(--white);
@@ -261,22 +195,30 @@ const signinRules = {
 }
 
 @keyframes show {
-  0%, 49.99% {
+
+  0%,
+  49.99% {
     opacity: 0;
     z-index: 1;
   }
-  50%, 100% {
+
+  50%,
+  100% {
     opacity: 1;
     z-index: 2;
   }
 }
 
 @keyframes hide {
-  0%, 49.99% {
+
+  0%,
+  49.99% {
     opacity: 1;
     z-index: 2;
   }
-  50%, 100% {
+
+  50%,
+  100% {
     opacity: 0;
     z-index: 1;
   }
