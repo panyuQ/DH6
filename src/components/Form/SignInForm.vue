@@ -17,6 +17,7 @@ import { ref } from 'vue';
 import { ElMessage } from 'element-plus';
 import { signin } from '@/api';
 
+const DEBUG = import.meta.env.DEV;
 const props = defineProps({
   gogogo: {
     type: Function,
@@ -54,9 +55,11 @@ const signinRules = {
 const handleSignin = async () => {
   try {
     await signinFormRef.value.validate();
-    await gogogo(signin);
+    await props.gogogo(signin, formRef.value);
   } catch (error) {
     ElMessage.error('签到失败');
+    if (DEBUG)
+      console.error('签到失败: ', error);
   }
 };
 </script>

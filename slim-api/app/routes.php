@@ -9,6 +9,7 @@ use App\Application\Actions\Users\Other\LoginAction;
 use App\Application\Actions\Users\Other\LoginStatusAction;
 use App\Application\Actions\Users\Other\LogoutAction;
 use App\Application\Actions\LogsSignin\FindAllLogsSigninAction;
+use App\Application\Actions\LogsSignin\AddOneLogsSigninAction;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\App;
@@ -46,7 +47,7 @@ return function (App $app) {
 
     // 签到相关路由
     $app->group('/signin', function (Group $group) {
-        $group->post('', LoginAction::class);
+        $group->post('', AddOneLogsSigninAction::class);
     });
 
     // 用户信息查找相关路由

@@ -4,18 +4,20 @@ import { ElMessage } from 'element-plus';
 import { LoginForm, SignInForm } from '@/components/Form';
 import { loginStatus } from '@/api';
 import { useRouter } from 'vue-router';
+
 const router = useRouter();
 
 const style = inject('PAGE_LOGIN');
 const isActive = ref(false);
 let bak = null;
+
 onBeforeMount(async () => {
   const status = await loginStatus();
-  if (status && status.result) {
-    ElMessage.warning('已登录');
+  if (status.result) {
     router.push({ name: 'home' });
   }
 });
+
 onMounted(() => {
   bak = document.body.style.background;
   document.body.style.background = style?.background1;
@@ -28,9 +30,7 @@ onBeforeUnmount(() => {
 
 const gogogo = async (func, data) => {
   const res = await func({ ...data });
-
   if (res.result) {
-    ElMessage.success(res.message);
     data = {};
     return true;
   } else {

@@ -138,4 +138,10 @@ class DatabaseUsersRepository implements UsersRepository
 
         return false;
     }
+    public function updateLastTime(int $id): int
+    {
+        $stmt = $this->pdo->prepare('UPDATE users SET last_time = NOW() WHERE id = :id');
+        $stmt->execute(['id' => $id]);
+        return $stmt->rowCount();
+    }
 }

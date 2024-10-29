@@ -35,10 +35,36 @@ class SessionMiddleware implements Middleware
                 session_start();
             }
 
+            // 重置会话生命
+            session_regenerate_id(true);
+            $_SESSION['last_activity'] = time();
+
+            // 检查会话是否过期
+            $sessionTimeout = 3600; // 1小时
+            if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity'] > $sessionTimeout)) {
+                // 会话过期，销毁会话
+                session_unset();
+                session_destroy();
+                // 返回会话过期的响应
+                $response = new \Slim\Psr7\Response();
+                $response->getBody()->write(json_encode(['message' => 'Session has expired']));
+                $response = $response->withStatus(401);
+                $response = $response->withHeader('Content-Type', 'application/json');
+                return $response;
+            }
+
             // 将会话数据添加到请求属性中
             $request = $request->withAttribute('session', $_SESSION);
         }
 
-        return $handler->handle($request);
+        // 处理请求
+        $response = $handler->handle($request);
+
+        // 更新会话数据
+        if (isset($_SESSION)) {
+            session_write_close();
+        }
+
+        return $response;
     }
 }

@@ -8,28 +8,69 @@ export const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:8081';
 
 axios.defaults.withCredentials = true;
 
-axios.interceptors.request.use(config => {
-    if (DEBUG) {
-        console.log(`发送 ${config.method.toUpperCase()} 请求: ${config.url}`, config.data ?? null);
+const handleError = (error, request) => {
+    const info = {};
+    info.type = request ? '-->>' : '<<--';
+    info.method = error.config.method.toUpperCase();
+    info.url = error.config.url;
+    info.error = {
+        name: error.name,
+        status: error.status,
     }
-    return config;
-}, error => {
-    handleError(error, true);
-    return Promise.reject(error);
-});
+    if (!request) {
+        info.error.type = error.response?.data?.error?.type ?? null;
+        info.error.description = error.response?.data?.error?.description ?? null;
+    } else {
 
-axios.interceptors.response.use(response => {
+    }
+
+    ElMessage.error(`${info.error.name} ${info.error.status}`);
+
     if (DEBUG) {
-        console.log(`响应 ${response.config.method.toUpperCase()} 请求: ${response.config.url}`, response.data);
+        console.error(`${info.type}  ${info.method}  ${info.url}`);
+        console.log(`错误代码：${info.error.status}`)
+        console.log(`错误名称：${info.error.name}`)
+        if (info.error.type){
+            console.log(`错误类型：${info.error.type}`);
+            console.log(`错误描述：${info.error.description}`);
+        }
+        
     }
-    if (response.data.statusCode !== 200) {
-        throw new Error(response.data.data);
+};
+
+axios.interceptors.request.use(
+    config => {
+        if (DEBUG) {
+            console.log(`-->>  ${config.method.toUpperCase()}\t${config.url}`, config.data ?? null);
+        }
+        return config;
+    },
+    error => {
+        handleError(error, true);
+        return Promise.reject(error);
     }
-    return response.data.data;
-}, error => {
-    handleError(error, false);
-    return Promise.reject(error);
-});
+);
+
+axios.interceptors.response.use(
+    response => {
+        const responseData = response.data;
+        if (DEBUG) {
+            console.log(`<<--  ${response.config.url}`, responseData.data);
+        }
+        if (responseData.data?.message) {
+            if (responseData.data?.result) {
+                ElMessage.success(responseData.data.message);
+            } else {
+                ElMessage.warning(responseData.data.message);
+            }
+        }
+        return responseData.data;
+    },
+    error => {
+        handleError(error, false);
+        return Promise.reject(error);
+    }
+);
 
 const get = async (url) => {
     return await axios.get(url);
@@ -39,22 +80,10 @@ const post = async (url, data) => {
     return await axios.post(url, data);
 };
 
-const handleError = (error, request) => {
-    let x = request ? '请求' : '响应';
-    if (DEBUG) {
-        console.error(`${error.config.method.toUpperCase()} ${x}出错: ${error.config.url} \n`, error);
-    }
-    ElMessage.error(`${x}错误: ${error.message}`);
-};
 
 export const fetchData = async (path, data = null) => {
-    let res = null;
-    try {
-        let url = `${API_URL}${path}`;
-        res = await (data ? post(url, data) : get(url));
-    } catch (error) {
-    }
-    return res;
+    let url = `${API_URL}${path}`;
+    return await (data ? post(url, data) : get(url)) ?? {};
 };
 
 const encryptPassword = (password) => CryptoJS.MD5(password).toString(CryptoJS.enc.Hex);

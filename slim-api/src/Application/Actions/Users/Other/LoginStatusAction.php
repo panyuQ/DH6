@@ -23,13 +23,18 @@ class LoginStatusAction extends UsersAction
             return $this
                 ->respondWithData(['result' => false, 'message' => '未登录']);
         }
+        // 获取用户
         $user = $this->usersRepository->findUserById($session['user']['id']);
+        // 更新最后登录时间
+        $this->usersRepository->updateLastTime($user->getId());
+        // 更新会话ID
+        $session['user']['id'] = $user->getId();
+        
         $body = [
             'id' => $user->getId(),
             'name' => $user->getName(),
             'level' => $user->getLevel(),
             'result' => true,
-            'message' => '已登录',
         ];
 
         return $this->respondWithData($body);

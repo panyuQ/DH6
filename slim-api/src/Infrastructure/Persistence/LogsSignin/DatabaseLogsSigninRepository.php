@@ -6,7 +6,7 @@ namespace App\Infrastructure\Persistence\LogsSignin;
 use App\Domain\LogsSignin\LogsSigninRepository;
 use App\Domain\LogsSignin\LogsSignin;
 use PDO;
-
+use DateTime;
 /**
  * 数据库用户仓库类，实现 UsersRepository 接口。
  */
@@ -54,4 +54,25 @@ class DatabaseLogsSigninRepository implements LogsSigninRepository
         return $users;
     }
 
+    public function addOne(int $id, string|null $name, int|null $level, string $ip, DateTime|string|null $time): bool
+    {
+        if ($time == null || !is_string($time)) {
+            $time = (new DateTime())->format('Y-m-d H:i:s');
+        } else if ($time instanceof DateTime) {
+            $time = $time->format('Y-m-d H:i:s');
+        }
+        try {
+            $stmt = $this->pdo->prepare('INSERT INTO logs_signin (`id`, `name`, `level`, `ip`, `time`) VALUES (:id, :name, :level, :ip, :time)');
+            $stmt->execute([
+                'id' => $id,
+                'name' => $name,
+                'level' => $level,
+                'ip' => $ip,
+                'time' => $time
+            ]);
+            return true;
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
 }

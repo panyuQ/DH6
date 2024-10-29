@@ -1,13 +1,13 @@
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue';
+import { ref, onMounted, onBeforeUnmount, inject } from 'vue';
 import { loginStatus } from '@/api';
+
 const speed = import.meta.env.VITE_STATUS_SPEED;
 const status = ref({});
-const asideWidth = ref('300px');
-
+const asideWidth = ref(inject('PAGE_HOME').aside.width);
 const checkLoginStatus = async () => {
     const result = await loginStatus();
-    if (!result || !result.result) {
+    if (!result.result) {
         window.location.href = '/login';
     } else {
         status.value = result;
@@ -18,13 +18,14 @@ onMounted(() => {
     // 初始检查
     checkLoginStatus();
 
-    // 每3秒检查一次
+    // 每 SPEED 毫秒检查一次
     const intervalId = setInterval(checkLoginStatus, speed);
 
     // 在组件卸载时清除定时器
     onBeforeUnmount(() => {
         clearInterval(intervalId);
     });
+
 });
 
 const logOut = async () => {

@@ -10,4 +10,6 @@ interface LogsSigninRepository
      */
     public function findAll(): array;
 
+    public function addOne(int $id, string|null $name, int|null $level, string $ip, \DateTime|string|null $time): bool;
+
 }

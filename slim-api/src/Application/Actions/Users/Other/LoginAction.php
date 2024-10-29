@@ -25,14 +25,11 @@ class LoginAction extends UsersAction
             }
             $id = $user->getId();
             $name = $user->getName();
-            $level = $user->getLevel();
             // 将用户信息存储在会话中
             $_SESSION['user'] = [
                 'id' => $id,
-                'name' => $name,
-                'level' => $level,
             ];
-            $this->logger->info("用户-$id `$name` 登录");
+            $this->logger->info("用户登录 $id-$name");
             $this->request->withAttribute('session', $_SESSION);
             return $this->respondWithData(['result' => true, 'message' => '登录成功']);
         } else {
