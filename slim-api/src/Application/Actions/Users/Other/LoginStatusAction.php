@@ -41,9 +41,6 @@ class LoginStatusAction extends UsersAction
         $_SESSION['user']['name'] = $name;
         $_SESSION['user']['level'] = $level;
 
-        // 重新生成会话ID以增加安全性
-        session_regenerate_id(true);
-        
         // 关闭会话写入锁
         if (isset($_SESSION)) {
             session_write_close();
