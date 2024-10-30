@@ -3,8 +3,9 @@ declare(strict_types=1);
 // src/Infrastructure/Persistence/Users/DatabaseUsersRepository.php
 namespace App\Infrastructure\Persistence\LogsSignin;
 
-use App\Domain\LogsSignin\LogsSigninRepository;
 use App\Domain\LogsSignin\LogsSignin;
+use App\Domain\LogsSignin\LogsSigninRepository;
+
 use PDO;
 use DateTime;
 /**
@@ -32,7 +33,7 @@ class DatabaseLogsSigninRepository implements LogsSigninRepository
     /**
      * 获取所有签到记录。
      *
-     * @return LogsSignin[] 用户对象数组。
+     * @return \App\Domain\LogsSignin\LogsSignin[] 用户对象数组。
      */
     public function findAll(): array
     {

@@ -1,8 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Application\Actions\Users;
+namespace App\Application\Actions\Users\Contrast;
 
+use App\Application\Actions\Users\UsersAction;
 use Psr\Http\Message\ResponseInterface as Response;
 
 class ContrastFeildUsersAction extends UsersAction

@@ -13,7 +13,7 @@ return function (ContainerBuilder $containerBuilder) {
             return new Settings([
                 'displayErrorDetails' => true, // 在生产环境中应设置为 false
                 'logError' => false,
-                'logErrorDetails' => false, 
+                'logErrorDetails' => false,
                 'logger' => [
                     'name' => 'DH6-API',
                     // 日志文件路径
@@ -36,8 +36,9 @@ return function (ContainerBuilder $containerBuilder) {
                     ],
                 ],
                 // API 权重 （与用户等级对应）
-                'apiLevel'=> [
+                'apiLevel' => [
                     '/find/users.*' => 2,
+                    '/find/config_page_menu.*' => 1
                 ],
             ]);
         }

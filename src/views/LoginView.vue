@@ -92,7 +92,7 @@ const toggle = () => {
 
 .overlay-container .overlay {
   background: center/cover no-repeat fixed;
-  background-color: var(--lightblue);
+  background-color: var(--blue-light);
   position: relative;
   width: 200%;
   height: 100%;
@@ -182,7 +182,7 @@ const toggle = () => {
   border-radius: 20px;
   padding: 1em 3.5em;
   color: var(--white);
-  background: var(--blue) linear-gradient(90deg, var(--blue) 0%, var(--lightblue) 74%);
+  background: var(--blue) linear-gradient(90deg, var(--blue) 0%, var(--blue-light) 74%);
 }
 
 .container.active .login {

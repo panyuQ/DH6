@@ -36,13 +36,13 @@ class ApiAuthMiddleware implements Middleware
             session_start();
         }
 
-        // 获取会话数据
-        $session = $_SESSION;
         // 获取当前用户等级
-        $level = isset($session['user']) && isset($session['user']['level']) ? $session['user']['level'] : 0;
+        $level = isset($_SESSION['user']) && isset($_SESSION['user']['level']) ? $_SESSION['user']['level'] : 0;
 
         if ($level < $weight) {
-            return (new Psr7Response())->withStatus(403);
+            $response = new Psr7Response();
+            $response->getBody()->write('权限不足');
+            return $response->withStatus(403);
         } else {
             return $handler->handle($request);
         }

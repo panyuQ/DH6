@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-// src/Infrastructure/Persistence/Users/DatabaseUsersRepository.php
+
 namespace App\Infrastructure\Persistence\Users;
 
 use App\Domain\Users\UsersRepository;

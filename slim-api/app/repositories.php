@@ -1,11 +1,15 @@
 <?php
 declare(strict_types=1);
 
+use App\Domain\ConfigPageMenu\ConfigPageMenuRepository;
+use App\Infrastructure\Persistence\ConfigPageMenu\DatabaseConfigPageMenuRepository;
+
 use App\Domain\Users\UsersRepository;
 use App\Infrastructure\Persistence\Users\DatabaseUsersRepository;
 
 use App\Domain\LogsSignin\LogsSigninRepository;
 use App\Infrastructure\Persistence\LogsSignin\DatabaseLogsSigninRepository;
+
 
 use DI\ContainerBuilder;
 
@@ -16,5 +20,8 @@ return function (ContainerBuilder $containerBuilder) {
     ]);
     $containerBuilder->addDefinitions([
         LogsSigninRepository::class => \DI\autowire(DatabaseLogsSigninRepository::class),
+    ]);
+    $containerBuilder->addDefinitions([
+        ConfigPageMenuRepository::class => \DI\autowire(DatabaseConfigPageMenuRepository::class),
     ]);
 };

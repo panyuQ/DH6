@@ -1,13 +1,20 @@
 <script setup>
-import { ref, onMounted, onBeforeUnmount, inject, reactive, watch  } from 'vue';
+import { ref, onMounted, onBeforeUnmount, inject, reactive } from 'vue';
 import { loginStatus } from '@/api';
 import { useRouter } from 'vue-router';
+import { Picture as IconPicture } from '@element-plus/icons-vue'
+import { Menu, Content } from '@/components/Home';
+import { findAllByNotGreaterLevel } from '@/api/config_page_menu';
 
 const speed = import.meta.env.VITE_STATUS_SPEED;
 const status = ref({});
-const asideWidth = ref(inject('PAGE_HOME').aside.width);
+const PAGE_HOME = inject('PAGE_HOME');
 const APP = inject('APP');
 const router = useRouter();
+const DATA = ref({
+    menu: null,
+    content: null,
+})
 
 
 const checkLoginStatus = async () => {
@@ -41,38 +48,68 @@ const logOut = async () => {
     router.push({ name: 'login' })
 };
 
-const startDragging = (e) => {
-    e.preventDefault();
-    document.addEventListener('mousemove', onDragging);
-    document.addEventListener('mouseup', stopDragging);
-};
 
-const onDragging = (e) => {
-    const newWidth = e.clientX + 'px';
-    asideWidth.value = newWidth;
-};
+const xxx = async () => {
+    console.log(await findAllByNotGreaterLevel())
 
-const stopDragging = () => {
-    document.removeEventListener('mousemove', onDragging);
-    document.removeEventListener('mouseup', stopDragging);
-};
-
-const xxx = () => {
-    console.log(APP.name)
+    DATA.value.menu = [
+        {
+            id: 1,
+            name: null,
+            folder: '关于',
+            icon: 'Menu',
+            children: [
+                {
+                    id: 2,
+                    name: '关于',
+                    folder: null,
+                    icon: 'Menu',
+                },
+                {
+                    id: 3,
+                    name: '帮助',
+                    folder: null,
+                    icon: 'Menu',
+                },
+            ]
+        }
+    ]
+    console.log(DATA.value.menu);
 };
 const font = reactive({
-  color: 'rgba(255, 255, 255, .15)',
+    color: 'rgba(255, 255, 255, .15)',
 })
 
 </script>
 
 <template>
     <el-container class="container">
-        <el-aside :style="{ width: asideWidth }" class="aside">
-            <div class="resize-handle" @mousedown="startDragging"></div>
-            <div class="title">DH666 1.0.0</div>
+
+        <el-aside :style="{ width: PAGE_HOME.aside.width }" class="aside">
+
+            <el-tooltip class="title" effect="dark" :content="APP.description" placement="bottom-end">
+                <a href="/" class="app-link">
+                    <el-image :src="APP.logo" class="logo">
+                        <template #error>
+                            <div class="image-slot">
+                                <el-icon><icon-picture /></el-icon>
+                            </div>
+                        </template>
+                    </el-image>
+                    <div class="app-title">
+                        <div class="name">{{ APP.name.toUpperCase() }}</div>
+                        <div class="version">v{{ APP.version }}</div>
+                    </div>
+                </a>
+            </el-tooltip>
+            <div class="content">
+                <Menu :datas="DATA.menu" />
+            </div>
+
         </el-aside>
+
         <el-container>
+
             <el-header class="header">
                 <div class="status">
                     <div class="id">{{ status.id }}-{{ status.level }}</div>
@@ -85,13 +122,16 @@ const font = reactive({
                     </el-popconfirm>
                 </div>
             </el-header>
+
             <el-main class="main">
-                <el-watermark class="content" :font="font" :content="[status.id+'-'+status.level, status.name]">
+                <el-watermark class="content" :font="font" :content="[status.id + '-' + status.level, status.name]">
                     <el-button @click="xxx">点击</el-button>
                 </el-watermark>
             </el-main>
         </el-container>
+
     </el-container>
+
 </template>
 
 <style scoped>
@@ -141,21 +181,15 @@ const font = reactive({
 
 .header .status .id {
     font-size: .75rem;
-    /* 较小的字体大小 */
     font-weight: normal;
-    /* 正常粗细 */
-    color: var(--color-text);
-    /* 较浅的文字颜色 */
+    color: var(--color-text-2);
     line-height: 1;
 }
 
 .header .status .name {
     font-size: 1.75rem;
-    /* 较大的字体大小 */
     font-weight: bold;
-    /* 加粗 */
     color: var(--color-heading);
-    /* 更亮的文字颜色 */
     line-height: 1;
 }
 
@@ -164,9 +198,51 @@ const font = reactive({
     padding: 0;
     z-index: 1;
 }
-.main .content{
+
+.main .content {
     width: 100%;
     height: 100%;
     padding: 20px;
+}
+
+/* 新增的样式 */
+.app-link {
+    --logo-size: 60px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    height: var(--logo-size);
+    text-decoration: none;
+    color: inherit;
+    column-gap: 10px;
+
+    padding: 10px 0 10px 40px;
+}
+
+.logo {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.app-title {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: flex-end;
+    column-gap: 5px;
+}
+
+.app-title .name {
+    font-size: 1.75rem;
+    font-weight: bold;
+    color: var(--color-heading);
+    line-height: 1;
+}
+
+.app-title .version {
+    font-size: 1rem;
+    color: var(--color-text-2);
+    line-height: 1;
 }
 </style>

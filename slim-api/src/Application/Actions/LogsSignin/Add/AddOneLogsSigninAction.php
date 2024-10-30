@@ -1,8 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Application\Actions\LogsSignin;
+namespace App\Application\Actions\LogsSignin\Add;
 
+use App\Application\Actions\LogsSignin\LogsSigninAction;
 use Psr\Http\Message\ResponseInterface as Response;
 
 class AddOneLogsSigninAction extends LogsSigninAction

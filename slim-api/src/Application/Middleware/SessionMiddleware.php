@@ -15,6 +15,10 @@ class SessionMiddleware implements Middleware
      */
     public function process(Request $request, RequestHandler $handler): Response
     {
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
+
         if (isset($_SERVER['HTTP_AUTHORIZATION'])) {
             // 设置会话的最大生存时间（单位：秒）
             ini_set('session.gc_maxlifetime', 3600); // 1小时
@@ -30,11 +34,6 @@ class SessionMiddleware implements Middleware
                 'samesite' => 'Lax' // SameSite 属性
             ]);
 
-            // 检查会话是否已经启动
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
-
             // 重置会话生命
             session_regenerate_id(true);
             $_SESSION['last_activity'] = time();
@@ -47,24 +46,20 @@ class SessionMiddleware implements Middleware
                 session_destroy();
                 // 返回会话过期的响应
                 $response = new \Slim\Psr7\Response();
-                $response->getBody()->write(json_encode(['message' => 'Session has expired']));
-                $response = $response->withStatus(401);
-                $response = $response->withHeader('Content-Type', 'application/json');
-                return $response;
+                $response->getBody()->write(json_encode('会话已经过期'));
+                
+                return $response->withStatus(401);
             }
 
             // 将会话数据添加到请求属性中
             $request = $request->withAttribute('session', $_SESSION);
         }
 
-        // 处理请求
-        $response = $handler->handle($request);
-
         // 更新会话数据
         if (isset($_SESSION)) {
             session_write_close();
         }
 
-        return $response;
+        return $handler->handle($request);
     }
 }

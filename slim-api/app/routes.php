@@ -1,17 +1,29 @@
 <?php
 declare(strict_types=1);
 
-use App\Application\Actions\Users\FindAllUsersAction;
-use App\Application\Actions\Users\FindOneByIdUsersAction;
-use App\Application\Actions\Users\FindFeildByIdUsersAction;
-use App\Application\Actions\Users\ContrastFeildUsersAction;
+use App\Application\Actions\ConfigPageMenu\Find\FindAllByNotGreaterLevelConfigPageMenuAction;
+
+
+use App\Application\Actions\Users\Contrast\ContrastFeildUsersAction;
+
+use App\Application\Actions\Users\Find\FindAllUsersAction;
+use App\Application\Actions\Users\Find\FindFeildByIdUsersAction;
+use App\Application\Actions\Users\Find\FindOneByIdUsersAction;
+
 use App\Application\Actions\Users\Other\LoginAction;
 use App\Application\Actions\Users\Other\LoginStatusAction;
 use App\Application\Actions\Users\Other\LogoutAction;
-use App\Application\Actions\LogsSignin\FindAllLogsSigninAction;
-use App\Application\Actions\LogsSignin\AddOneLogsSigninAction;
+
+
+
+use App\Application\Actions\LogsSignin\Add\AddOneLogsSigninAction;
+
+use App\Application\Actions\LogsSignin\Find\FindAllLogsSigninAction;
+
+
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+
 use Slim\App;
 use Slim\Interfaces\RouteCollectorProxyInterface as Group;
 
@@ -55,6 +67,10 @@ return function (App $app) {
         $group->get('', FindAllUsersAction::class);
         $group->get('/{id}', FindOneByIdUsersAction::class);
         $group->get('/{field}/{id}', FindFeildByIdUsersAction::class);
+    });
+
+    $app->group('/find/config_page_menu', function (Group $group) {
+        $group->get('', FindAllByNotGreaterLevelConfigPageMenuAction::class);
     });
 
     // 签到日志查找相关路由

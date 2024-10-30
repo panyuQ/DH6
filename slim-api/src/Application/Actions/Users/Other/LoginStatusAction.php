@@ -13,31 +13,50 @@ class LoginStatusAction extends UsersAction
      */
     protected function action(): Response
     {
-        // 检查会话是否已经启动
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
-        $session = $_SESSION;
-        $res = isset($session['user']) && isset($session['user']['id']);
-        if (!$res) {
-            return $this
-                ->respondWithData(['result' => false]);
+        
+        // 检查会话中是否有用户信息
+        if (!isset($_SESSION['user']) || !isset($_SESSION['user']['id'])) {
+            return $this->respondWithData(['result' => false]);
         }
+
         // 获取用户
-        $user = $this->usersRepository->findUserById($session['user']['id']);
+        $user = $this->usersRepository->findUserById($_SESSION['user']['id']);
+
+        if (!$user) {
+            return $this->respondWithData(['result' => false]);
+        }
+
         // 更新最后登录时间
         $this->usersRepository->updateLastTime($user->getId());
+
         // 更新会话ID
-        $session['user']['id'] = $user->getId();
+        $id = $user->getId();
+        $name = $user->getName();
+        $level = $user->getLevel();
+
+        $_SESSION['user']['id'] = $id;
+        $_SESSION['user']['name'] = $name;
+        $_SESSION['user']['level'] = $level;
+
+        // 重新生成会话ID以增加安全性
+        session_regenerate_id(true);
+        
+        // 关闭会话写入锁
+        if (isset($_SESSION)) {
+            session_write_close();
+        }
+
 
         $body = [
-            'id' => $user->getId(),
-            'name' => $user->getName(),
-            'level' => $user->getLevel(),
+            'id' => $id,
+            'name' => $name,
+            'level' => $level,
             'result' => true,
         ];
 
         return $this->respondWithData($body);
     }
-
 }
