@@ -36,6 +36,16 @@ cd slim-api/
 composer install
 ```
 
-### 一键运行脚本（可以更改其中端口号）
+### 开发模式
 
-脚本在根目录, 文件名称格式: `start-XXX-release.XX`
+```sh
+npm run dev # 运行前端, 默认 5173 端口
+```
+
+```sh
+npm run dev:api # 运行后端, 默认 8081 端口
+```
+
+### 一键运行发行版本（可以更改其中端口号）
+
+脚本在根目录, 文件名称格式: `start-XXX-rel.XX`
