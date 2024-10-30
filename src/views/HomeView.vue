@@ -50,31 +50,8 @@ const logOut = async () => {
 
 
 const xxx = async () => {
-    console.log(await findAllByNotGreaterLevel())
 
-    DATA.value.menu = [
-        {
-            id: 1,
-            name: null,
-            folder: '关于',
-            icon: 'Menu',
-            children: [
-                {
-                    id: 2,
-                    name: '关于',
-                    folder: null,
-                    icon: 'Menu',
-                },
-                {
-                    id: 3,
-                    name: '帮助',
-                    folder: null,
-                    icon: 'Menu',
-                },
-            ]
-        }
-    ]
-    console.log(DATA.value.menu);
+    DATA.value.menu = await findAllByNotGreaterLevel()
 };
 const font = reactive({
     color: 'rgba(255, 255, 255, .15)',
