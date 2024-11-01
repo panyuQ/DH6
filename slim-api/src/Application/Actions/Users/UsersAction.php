@@ -18,8 +18,9 @@ abstract class UsersAction extends Action
      * @param LoggerInterface $logger
      * @param UsersRepository $usersRepository
      */
-    public function __construct(LoggerInterface $logger,
-                                UsersRepository $usersRepository
+    public function __construct(
+        LoggerInterface $logger,
+        UsersRepository $usersRepository
     ) {
         parent::__construct($logger);
         $this->usersRepository = $usersRepository;

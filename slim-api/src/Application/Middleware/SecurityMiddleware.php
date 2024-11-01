@@ -35,7 +35,5 @@ class SecurityMiddleware implements Middleware
             ->withHeader('X-XSS-Protection', '1; mode=block')
             ->withHeader('Referrer-Policy', 'no-referrer-when-downgrade')
             ->withHeader('Content-Security-Policy', "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline';");
-
     }
-
 }

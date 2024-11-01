@@ -1,6 +1,9 @@
 <?php
 declare(strict_types=1);
 
+use App\Application\Actions\ConfigPageContent\Find\FindOneByIdAndNotGreaterLevelConfigPageContentAction;
+
+
 use App\Application\Actions\ConfigPageMenu\Find\FindAllByNotGreaterLevelConfigPageMenuAction;
 
 
@@ -14,11 +17,10 @@ use App\Application\Actions\Users\Other\LoginAction;
 use App\Application\Actions\Users\Other\LoginStatusAction;
 use App\Application\Actions\Users\Other\LogoutAction;
 
-
-
 use App\Application\Actions\LogsSignin\Add\AddOneLogsSigninAction;
 
 use App\Application\Actions\LogsSignin\Find\FindAllLogsSigninAction;
+
 
 
 use Psr\Http\Message\ResponseInterface as Response;
@@ -62,6 +64,7 @@ return function (App $app) {
         $group->post('', AddOneLogsSigninAction::class);
     });
 
+
     // 用户信息查找相关路由
     $app->group('/find/users', function (Group $group) {
         $group->get('', FindAllUsersAction::class);
@@ -71,6 +74,10 @@ return function (App $app) {
 
     $app->group('/find/config_page_menu', function (Group $group) {
         $group->get('', FindAllByNotGreaterLevelConfigPageMenuAction::class);
+    });
+
+    $app->group('/find/config_page_content', function (Group $group) {
+        $group->get('/{id}', FindOneByIdAndNotGreaterLevelConfigPageContentAction::class);
     });
 
     // 签到日志查找相关路由

@@ -9,7 +9,7 @@ const props = defineProps({
     handleSelect: {
         type: Function,
         default: (key: string, keyPath: string[]) => {
-            ElMessage.warning('此处尚未开发')
+            ElMessage.warning('此处尚未开放')
         }
     }
 })

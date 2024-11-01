@@ -17,6 +17,7 @@ class LoginAction extends UsersAction
         $formData = $this->getFormData();
         $username = $formData->username ?? null;
         $password = $formData->password ?? null;
+
         if ($username && $password) {
 
             $user = $this->usersRepository->findUserByUsernameAndPassword($username, $password);

@@ -4,6 +4,10 @@ declare(strict_types=1);
 use App\Domain\ConfigPageMenu\ConfigPageMenuRepository;
 use App\Infrastructure\Persistence\ConfigPageMenu\DatabaseConfigPageMenuRepository;
 
+
+use App\Domain\ConfigPageContent\ConfigPageContentRepository;
+use App\Infrastructure\Persistence\ConfigPageContent\DatabaseConfigPageContentRepository;
+
 use App\Domain\Users\UsersRepository;
 use App\Infrastructure\Persistence\Users\DatabaseUsersRepository;
 
@@ -23,5 +27,8 @@ return function (ContainerBuilder $containerBuilder) {
     ]);
     $containerBuilder->addDefinitions([
         ConfigPageMenuRepository::class => \DI\autowire(DatabaseConfigPageMenuRepository::class),
+    ]);
+    $containerBuilder->addDefinitions([
+        ConfigPageContentRepository::class => \DI\autowire(DatabaseConfigPageContentRepository::class),
     ]);
 };

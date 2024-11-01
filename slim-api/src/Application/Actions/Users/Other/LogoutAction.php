@@ -17,6 +17,11 @@ class LogoutAction extends UsersAction
         $name = $id ? $this->usersRepository->findUserById($id)->getName() : null;
         session_destroy();
         $this->logger->info("用户注销 $id-$name");
+
+        // 关闭会话写入锁
+        if (isset($_SESSION)) {
+            session_write_close();
+        }
         return $this
             ->respondWithData(['result' => true, 'message' => '注销成功']);
     }

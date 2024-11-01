@@ -2,10 +2,9 @@
 import { ref, onMounted, onBeforeUnmount, inject, reactive } from 'vue';
 import { loginStatus } from '@/api';
 import { useRouter } from 'vue-router';
-import { Picture as IconPicture } from '@element-plus/icons-vue'
+import { Picture as IconPicture, ArrowRight } from '@element-plus/icons-vue'
 import { Menu, Content } from '@/components/Home';
 import { findAllByNotGreaterLevel } from '@/api/config_page_menu';
-import { ElMessage } from 'element-plus';
 
 const speed = import.meta.env.VITE_STATUS_SPEED;
 const status = ref({});
@@ -17,6 +16,10 @@ const DATA = ref({
     content: null,
 })
 
+const handleSelect = (key, keyPath=null) => {
+    DATA.value.content = parseInt(key);
+    console.log('content', DATA.value.content);
+}
 
 const checkLoginStatus = async () => {
     const result = await loginStatus();
@@ -24,6 +27,7 @@ const checkLoginStatus = async () => {
         logOut();
     } else {
         status.value = result;
+        DATA.value.menu = await findAllByNotGreaterLevel()
     }
 };
 
@@ -34,11 +38,12 @@ onMounted(() => {
     // 每 SPEED 毫秒检查一次
     const intervalId = setInterval(checkLoginStatus, speed);
 
+
     // 在组件卸载时清除定时器
     onBeforeUnmount(() => {
         clearInterval(intervalId);
     });
-
+    DATA.value.content = 0;
 });
 
 const logOut = async () => {
@@ -50,10 +55,6 @@ const logOut = async () => {
 };
 
 
-const xxx = async () => {
-
-    DATA.value.menu = await findAllByNotGreaterLevel()
-};
 const font = reactive({
     color: 'rgba(255, 255, 255, .15)',
 })
@@ -67,7 +68,7 @@ const font = reactive({
         <el-aside :style="{ width: PAGE_HOME.aside.width }" class="aside">
 
             <el-tooltip class="title" effect="dark" :content="APP.description" placement="bottom-end">
-                <a href="/" class="app-link">
+                <div class="app-link" @click="handleSelect(0)">
                     <el-image :src="APP.logo" class="logo">
                         <template #error>
                             <div class="image-slot">
@@ -79,10 +80,10 @@ const font = reactive({
                         <div class="name">{{ APP.name.toUpperCase() }}</div>
                         <div class="version">v{{ APP.version }}</div>
                     </div>
-                </a>
+                </div>
             </el-tooltip>
             <div class="content">
-                <Menu :datas="DATA.menu" />
+                <Menu :datas="DATA.menu" :handle-select="handleSelect" />
             </div>
 
         </el-aside>
@@ -90,6 +91,12 @@ const font = reactive({
         <el-container>
 
             <el-header class="header">
+                <div class="breadcrumb">
+                    <el-breadcrumb :separator-icon="ArrowRight">
+                        <el-breadcrumb-item>首页</el-breadcrumb-item>
+                        <el-breadcrumb-item>首页</el-breadcrumb-item>
+                    </el-breadcrumb>
+                </div>
                 <div class="status">
                     <div class="id">{{ status.id }}-{{ status.level }}</div>
                     <el-popconfirm title="是否确认注销?" @confirm="logOut">
@@ -104,7 +111,7 @@ const font = reactive({
 
             <el-main class="main">
                 <el-watermark class="content" :font="font" :content="[status.id + '-' + status.level, status.name]">
-                    <el-button @click="xxx">点击</el-button>
+                    <Content :page-index="DATA.content" />
                 </el-watermark>
             </el-main>
         </el-container>
@@ -144,12 +151,16 @@ const font = reactive({
     position: sticky;
     top: 0;
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: center;
     padding: 15px 40px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     z-index: 2;
     border-bottom: 1px solid var(--color-border);
+}
+
+.header .breadcrumb {
+    --el-text-color-regular: var(--color-text-1);
 }
 
 .header .status {
@@ -194,6 +205,7 @@ const font = reactive({
     text-decoration: none;
     color: inherit;
     column-gap: 10px;
+    cursor: pointer;
 
     padding: 10px 0 10px 40px;
 }

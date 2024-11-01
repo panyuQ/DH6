@@ -35,11 +35,12 @@ return function (ContainerBuilder $containerBuilder) {
                         PDO::ATTR_EMULATE_PREPARES => false,
                     ],
                 ],
-                'sessionTime' => 0.1,
+                'sessionTime' => 3600,
                 // API 权重 （与用户等级对应）
                 'apiLevel' => [
                     '/find/users.*' => 2,
-                    '/find/config_page_menu.*' => 1
+                    '/find/config_page_menu.*' => 1,
+                    '/find/config_page_content.*' => 1
                 ],
             ]);
         }

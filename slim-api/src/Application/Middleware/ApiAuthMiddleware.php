@@ -37,11 +37,12 @@ class ApiAuthMiddleware implements Middleware
         }
 
         // 获取当前用户等级
+
         $level = isset($_SESSION['user']) && isset($_SESSION['user']['level']) ? $_SESSION['user']['level'] : 0;
 
         if ($level < $weight) {
             $response = new Psr7Response();
-            $response->getBody()->write('权限不足');
+            $response->getBody()->write('权限不足, 当前权限等级: ' . $level);
             return $response->withStatus(403);
         } else {
             return $handler->handle($request);
