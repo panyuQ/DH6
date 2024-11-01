@@ -15,8 +15,14 @@ const DATA = ref(null);
 const pageIndexRef = toRef(props, 'pageIndex');
 
 watch(pageIndexRef, async (newPageIndex) => {
-    if (newPageIndex != null)
-        DATA.value = await findOneByIdAndNotGreaterLevel(newPageIndex);
+    if (newPageIndex != null) {
+        const data = await findOneByIdAndNotGreaterLevel(newPageIndex);
+        if (data.result) {
+            DATA.value = JSON.parse(data.content.data);
+        } else{
+            DATA.value = null;
+        }
+    }
 });
 </script>
 

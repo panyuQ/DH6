@@ -94,7 +94,6 @@ const font = reactive({
                 <div class="breadcrumb">
                     <el-breadcrumb :separator-icon="ArrowRight">
                         <el-breadcrumb-item>首页</el-breadcrumb-item>
-                        <el-breadcrumb-item>首页</el-breadcrumb-item>
                     </el-breadcrumb>
                 </div>
                 <div class="status">

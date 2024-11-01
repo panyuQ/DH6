@@ -19,6 +19,7 @@ class FindOneByIdAndNotGreaterLevelConfigPageContentAction extends ConfigPageCon
             return $this
                 ->respondWithData(['result' => false, 'message' => '系统繁忙']);
         }
+
         $id = $_SESSION['user']['id'];
         $level = (int) $this->usersRepository->findFieldById($id, 'level');
 
@@ -28,6 +29,10 @@ class FindOneByIdAndNotGreaterLevelConfigPageContentAction extends ConfigPageCon
         $configPageContent = $this->configPageContentRepository->findOneByIdAndNotGreaterLevel($id, $level);
         $this->logger->info("查找数据 `config_page_content`-`*` (id = ${id}, level <= ${level}, level DESC , limit = 1)");
 
+        if (!$configPageContent) {
+            return $this
+                ->respondWithData(['result' => false, 'message' => '暂未开放此功能']);
+        }
         return $this->respondWithData(['result' => true, 'content' => $configPageContent]);
 
     }
