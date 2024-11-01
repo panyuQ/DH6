@@ -5,5 +5,5 @@ namespace App\Domain\ConfigPageMenu;
 
 interface ConfigPageMenuRepository
 {
-    public function findAllByNotGreaterLevel(int $level): array;
+    public function findAllByNotGreaterLevel(int $level, ?bool $folder = null): array;
 }

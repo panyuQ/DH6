@@ -5,6 +5,7 @@ import { useRouter } from 'vue-router';
 import { Picture as IconPicture } from '@element-plus/icons-vue'
 import { Menu, Content } from '@/components/Home';
 import { findAllByNotGreaterLevel } from '@/api/config_page_menu';
+import { ElMessage } from 'element-plus';
 
 const speed = import.meta.env.VITE_STATUS_SPEED;
 const status = ref({});
@@ -56,6 +57,7 @@ const xxx = async () => {
 const font = reactive({
     color: 'rgba(255, 255, 255, .15)',
 })
+
 
 </script>
 
