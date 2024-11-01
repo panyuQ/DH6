@@ -76,8 +76,6 @@ class LoginStatusAction extends UsersAction
         $_SESSION['user']['name'] = $name;
         $_SESSION['user']['level'] = $level;
 
-        // 确保会话数据写入并关闭
-        session_write_close();
 
         $body = [
             'id' => $id,

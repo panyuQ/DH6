@@ -18,6 +18,11 @@ class SecurityMiddleware implements Middleware
         // 处理请求
         $response = $handler->handle($request);
 
+        session_regenerate_id();
+        // 释放会话写锁
+        session_write_close();
+
+        
         // 响应头处理
         $response = $this->handleHeader($response);
 

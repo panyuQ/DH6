@@ -36,11 +36,6 @@ class LoginAction extends UsersAction
                     'level' => $user->getLevel(),
                 ];
 
-                // 关闭会话锁
-                if (isset($_SESSION)) {
-                    session_write_close();
-                }
-
                 $this->logger->info("用户登录 $id-$name");
 
                 return $this->respondWithData(['result' => true, 'message' => '登录成功']);
