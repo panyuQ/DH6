@@ -21,7 +21,7 @@ use App\Application\Actions\LogsSignin\Add\AddOneLogsSigninAction;
 
 use App\Application\Actions\LogsSignin\Find\FindAllLogsSigninAction;
 
-
+use App\Application\Actions\Other\Find\FindBaseOtherAction;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -64,6 +64,9 @@ return function (App $app) {
         $group->post('', AddOneLogsSigninAction::class);
     });
 
+    $app->group('/find/other', function (Group $group) {
+        $group->get('/base', FindBaseOtherAction::class);
+    });
 
     // 用户信息查找相关路由
     $app->group('/find/users', function (Group $group) {

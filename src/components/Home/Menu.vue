@@ -1,56 +1,81 @@
 <script lang="ts" setup>
 import * as Icons from '@element-plus/icons-vue';
-import { ElMessage } from 'element-plus';
-import { watch, ref } from 'vue';
+import { ref, computed } from 'vue';
+import type { PropType } from 'vue';
+
+interface MenuItem {
+    id: number;
+    name?: string;
+    folder?: string;
+    icon?: string;
+    children?: MenuItem[];
+}
+
 const props = defineProps({
     datas: {
-        type: Object,
+        type: Array as PropType<MenuItem[]>,
+        required: true,
+        default: []
+    },
+    activeIndex: {
+        type: String,
+        default: '0'
     },
     handleSelect: {
         type: Function,
-        default: (key: string, keyPath: string[]) => {
-            ElMessage.warning('此处尚未开放')
+        default: (key: string) => {
+            import('element-plus').then(({ ElMessage }) => {
+                ElMessage.warning('此处尚未开放');
+            });
         }
     }
-})
+});
 
-const DATA = ref(null);
-watch(() => props.datas, (newDatas) => {
-    DATA.value = [];
-    const folder = {};
+// 使用 computed 计算 DATA，添加有效性检查
+const DATA = computed(() => {
+    if (!props.datas || !Array.isArray(props.datas)) {
+        return []; // 返回一个空数组，避免 forEach 出错
+    }
 
-    newDatas.forEach((item: any) => {
+    const result: MenuItem[] = [];
+    const folder: Record<string, MenuItem[]> = {};
+
+    props.datas.forEach((item) => {
         if (item.folder != null) {
             if (item.name == null) {
-                // 如果没有名称，直接添加到 DATA 并初始化 children 数组
-                DATA.value.push(item);
+                result.push(item);
                 item.children = [];
                 folder[item.folder] = item.children;
             } else {
-                // 如果有名称，添加到对应的 folder 子项中
                 (folder[item.folder] || (folder[item.folder] = [])).push(item);
             }
         } else {
-            // 没有 folder 的项直接添加到 DATA
-            DATA.value.push(item);
+            result.push(item);
         }
     });
+
+    // 为每个 folder 添加 children
+    result.forEach((item) => {
+        if (folder[item.folder]) {
+            item.children = folder[item.folder];
+        }
+    });
+
+    return result;
 });
-
-
 </script>
 
 <template>
-    <el-menu :unique-opened="true" @select="handleSelect">
-        <template v-for="item in DATA">
-            <el-sub-menu :index="item.id.toString()" v-if="item.folder">
+    <el-menu :unique-opened="true" @select="handleSelect" :default-active="activeIndex">
+        <template v-for="item in DATA" :key="item.id">
+            <el-sub-menu v-if="item.folder" :index="item.id.toString()">
                 <template #title>
                     <el-icon>
                         <component :is="Icons[item.icon]" />
                     </el-icon>
                     <span>{{ item.folder }}</span>
                 </template>
-                <el-menu-item v-for="subItem in item.children" :index="subItem.id.toString()">
+                <el-menu-item v-for="subItem in item.children" :key="subItem.id" :index="subItem.id.toString()">
                     <template #title>
                         <el-icon>
                             <component :is="Icons[subItem.icon]" />
@@ -68,7 +93,6 @@ watch(() => props.datas, (newDatas) => {
                 </template>
             </el-menu-item>
         </template>
-
     </el-menu>
 </template>
 

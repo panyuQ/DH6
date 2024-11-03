@@ -12,13 +12,18 @@ const PAGE_HOME = inject('PAGE_HOME');
 const APP = inject('APP');
 const router = useRouter();
 const DATA = ref({
-    menu: null,
+    menu: [],
     content: null,
 })
+const activeIndex = ref('0');
 
-const handleSelect = (key, keyPath=null) => {
+const handleSelect = (key, keyPath = null) => {
     DATA.value.content = parseInt(key);
-    console.log('content', DATA.value.content);
+    if (key == 0) {
+        activeIndex.value = '0';
+    } else {
+        activeIndex.value = key;
+    }
 }
 
 const checkLoginStatus = async () => {
@@ -83,7 +88,7 @@ const font = reactive({
                 </div>
             </el-tooltip>
             <div class="content">
-                <Menu :datas="DATA.menu" :handle-select="handleSelect" />
+                <Menu :datas="DATA.menu" :handle-select="handleSelect" :active-index="activeIndex" />
             </div>
 
         </el-aside>

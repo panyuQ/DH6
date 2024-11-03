@@ -18,6 +18,9 @@ if (false) { // 在生产环境中应设置为 true
     $containerBuilder->enableCompilation(__DIR__ . '/../var/cache');
 }
 
+// 设置时区为中国时区（CST，即东八区，UTC+8）
+date_default_timezone_set('Asia/Shanghai');
+
 // 设置应用配置
 $settings = require __DIR__ . '/../app/settings.php';
 $settings($containerBuilder);
