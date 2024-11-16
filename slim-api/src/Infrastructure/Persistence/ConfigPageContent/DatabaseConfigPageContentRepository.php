@@ -53,4 +53,59 @@ class DatabaseConfigPageContentRepository implements ConfigPageContentRepository
             $row['data']
         );
     }
+
+    public function findOneByIdAndLevel(int $id, int $level): ?ConfigPageContent
+    {
+
+        // 构建 SQL 查询，查找不大于 $level 的最大 level 的记录
+        $sql = 'SELECT * FROM config_page_content 
+            WHERE id = :id AND level = :level';
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(['id' => $id, 'level' => $level]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // 如果没有找到符合条件的记录，返回 null
+        if (!$row) {
+            return null;
+        }
+
+        // 返回 ConfigPageContent 对象
+        return new ConfigPageContent(
+            (int) $row['id'],
+            (int) $row['level'],
+            $row['data']
+        );
+    }
+
+    public function findIdAndLevel(): ?array
+    {
+        // 查询所有唯一的 id 值
+        $sqlId = "SELECT DISTINCT id FROM config_page_content";
+        $stmtId = $this->pdo->prepare($sqlId);
+
+        // 查询所有唯一的 level 值
+        $sqlLevel = "SELECT DISTINCT level FROM config_page_content";
+        $stmtLevel = $this->pdo->prepare($sqlLevel);
+
+        // 执行查询
+        if ($stmtId->execute() && $stmtLevel->execute()) {
+            // 获取所有 id 结果
+            $resultsId = $stmtId->fetchAll(PDO::FETCH_ASSOC);
+            $ids = array_column($resultsId, 'id');
+
+            // 获取所有 level 结果
+            $resultsLevel = $stmtLevel->fetchAll(PDO::FETCH_ASSOC);
+            $levels = array_column($resultsLevel, 'level');
+
+            // 返回结果
+            return [
+                'id' => $ids,
+                'level' => $levels
+            ];
+        } else {
+            // 查询执行失败时返回 null
+            return null;
+        }
+    }
 }

@@ -1,29 +1,47 @@
 <script setup>
-import { ref, watch, toRef } from 'vue';
+import { ref, watch, toRef, onMounted } from 'vue';
 import { findOneByIdAndNotGreaterLevel } from '@/api/config_page_content';
 import { fetchData } from '@/api';
+import ContentEdit from './ContentEdit.vue';
 
 const props = defineProps({
     pageIndex: {
         type: Number,
         default: null
+    },
+    datas: {
+        type: Object,
+        default: null
     }
 });
 
-const DATA = ref(null);
+const DATA = ref({});
 const VALUE = ref({});
+const EDIT = ref(false);
+onMounted(async () => {
+    if (props.datas == null) {
+        // 使用 toRef 将 props.pageIndex 转换为响应式引用
+        const pageIndexRef = toRef(props, 'pageIndex');
 
-// 使用 toRef 将 props.pageIndex 转换为响应式引用
-const pageIndexRef = toRef(props, 'pageIndex');
+        watch(pageIndexRef, async (newPageIndex) => {
+            if (newPageIndex != null) {
+                if (newPageIndex === 99) {
+                    EDIT.value = true;
+                    console.log(newPageIndex)
+                } else {
+                    EDIT.value = false;
+                    const data = await findOneByIdAndNotGreaterLevel(newPageIndex);
+                    if (data.result) {
+                        DATA.value = JSON.parse(data.content.data);
+                    } else {
+                        DATA.value = null;
+                    }
 
-watch(pageIndexRef, async (newPageIndex) => {
-    if (newPageIndex != null) {
-        const data = await findOneByIdAndNotGreaterLevel(newPageIndex);
-        if (data.result) {
-            DATA.value = JSON.parse(data.content.data);
-        } else {
-            DATA.value = null;
-        }
+                }
+            }
+        });
+    } else {
+        DATA.value = props.datas;
     }
 });
 
@@ -41,7 +59,8 @@ watch(DATA, async (newData) => {
 </script>
 
 <template>
-    <el-form :style="{
+    <ContentEdit v-if="EDIT" />
+    <el-form v-else :style="{
         // 大小相关样式
         width: DATA?.style?.width, // 宽度
         height: DATA?.style?.height, // 高度
@@ -83,8 +102,8 @@ watch(DATA, async (newData) => {
         boxShadow: DATA?.style?.boxShadow, // 阴影
     }" :label-width="DATA?.label?.width" :label-position="DATA?.label?.position">
 
-        <el-row v-if="DATA" v-for="ROW in DATA.content" :gutter="ROW?.gutter" :justify="ROW?.justify"
-            :align="ROW?.align" :tag="ROW?.tag">
+        <el-row v-if="DATA" v-for="ROW in DATA.ROWS" :gutter="ROW?.gutter" :justify="ROW?.justify" :align="ROW?.align"
+            :tag="ROW?.tag">
 
             <el-col v-for="COL in ROW.COLS" :span="COL?.span" :offset="COL?.offset" :pull="COL?.pull" :push="COL?.push"
                 :tag="COL?.tag">
@@ -157,7 +176,8 @@ watch(DATA, async (newData) => {
                         }">
 
                         {{ VALUE[COL?.text?.field] ?? COL?.text }}
-
+                        <component v-for="item in VALUE[COL?.subElement?.field]" :is="COL?.subElement?.element"
+                            :label="item.label" :value="item.value" />
                     </component>
 
                 </el-form-item>
@@ -167,6 +187,8 @@ watch(DATA, async (newData) => {
         </el-row>
 
     </el-form>
+
+
 </template>
 
 <style scoped>

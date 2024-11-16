@@ -108,3 +108,7 @@ export const logout = async () => {
 export const signin = async (data) => {
     return await fetchData('/signin', data);
 };
+
+export const isRoot = async () => {
+    return await fetchData('/is/root');
+};

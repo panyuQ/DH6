@@ -30,37 +30,57 @@ class DatabaseConfigPageMenuRepository implements ConfigPageMenuRepository
     }
 
 
-public function findAllByNotGreaterLevel(int $level, ?bool $folder = null): array
-{
-    // 构建基础查询
-    $sql = 'SELECT * FROM config_page_menu WHERE level <= :level';
+    public function findAll(): array
+    {
+        $sql = 'SELECT * FROM config_page_menu ORDER BY id ASC, sort ASC';
+        $stmt = $this->pdo->query($sql);
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $result = [];
+        foreach ($rows as $row) {
+            $result[] = new ConfigPageMenu(
+                (int) $row['id'],
+                (int) $row['level'],
+                $row['folder'],
+                $row['name'],
+                $row['icon'],
+                $row['sort']
+            );
+        }
 
-    // 根据 $folder 参数添加额外条件
-    if ($folder !== null) {
-        $sql .= ' AND folder ' . ($folder ? 'IS NOT NULL' : 'IS NULL');
+        return $result;
     }
 
-    // 添加排序条件
-    $sql .= ' ORDER BY id ASC, sort ASC';
+    public function findAllByNotGreaterLevel(int $level, ?bool $folder = null): array
+    {
+        // 构建基础查询
+        $sql = 'SELECT * FROM config_page_menu WHERE level <= :level';
 
-    // 准备和执行查询
-    $stmt = $this->pdo->prepare($sql);
-    $stmt->execute(['level' => $level]);
-    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        // 根据 $folder 参数添加额外条件
+        if ($folder !== null) {
+            $sql .= ' AND folder ' . ($folder ? 'IS NOT NULL' : 'IS NULL');
+        }
 
-    // 构建结果数组
-    $result = [];
-    foreach ($rows as $row) {
-        $result[] = new ConfigPageMenu(
-            (int) $row['id'],
-            (int) $row['level'],
-            $row['folder'],
-            $row['name'],
-            $row['icon'],
-            $row['sort']
-        );
+        // 添加排序条件
+        $sql .= ' ORDER BY id ASC, sort ASC';
+
+        // 准备和执行查询
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(['level' => $level]);
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // 构建结果数组
+        $result = [];
+        foreach ($rows as $row) {
+            $result[] = new ConfigPageMenu(
+                (int) $row['id'],
+                (int) $row['level'],
+                $row['folder'],
+                $row['name'],
+                $row['icon'],
+                $row['sort']
+            );
+        }
+
+        return $result;
     }
-
-    return $result;
-}
 }

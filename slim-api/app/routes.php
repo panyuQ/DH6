@@ -2,17 +2,21 @@
 declare(strict_types=1);
 
 use App\Application\Actions\ConfigPageContent\Find\FindOneByIdAndNotGreaterLevelConfigPageContentAction;
+use App\Application\Actions\ConfigPageContent\Find\FindOneByIdAndLevelConfigPageContentAction;
+use App\Application\Actions\ConfigPageContent\Find\FindIdAndLevelConfigPageContentAction;
 
 
 use App\Application\Actions\ConfigPageMenu\Find\FindAllByNotGreaterLevelConfigPageMenuAction;
 
 
+use App\Application\Actions\ConfigPageMenu\Find\FindAllConfigPageMenuAction;
 use App\Application\Actions\Users\Contrast\ContrastFeildUsersAction;
 
 use App\Application\Actions\Users\Find\FindAllUsersAction;
 use App\Application\Actions\Users\Find\FindFeildByIdUsersAction;
 use App\Application\Actions\Users\Find\FindOneByIdUsersAction;
 
+use App\Application\Actions\Users\Other\IsRootAction;
 use App\Application\Actions\Users\Other\LoginAction;
 use App\Application\Actions\Users\Other\LoginStatusAction;
 use App\Application\Actions\Users\Other\LogoutAction;
@@ -47,6 +51,9 @@ return function (App $app) {
     });
 
     // 登录状态检查
+    $app->group('/is', function (Group $group) {
+        $group->get('/root', IsRootAction::class);
+    });
 
     // 登录相关路由
     $app->group('/login', function (Group $group) {
@@ -77,10 +84,14 @@ return function (App $app) {
 
     $app->group('/find/config_page_menu', function (Group $group) {
         $group->get('', FindAllByNotGreaterLevelConfigPageMenuAction::class);
+        $group->get('/all', FindAllConfigPageMenuAction::class);
     });
 
     $app->group('/find/config_page_content', function (Group $group) {
+        $group->get('/id_and_level', FindIdAndLevelConfigPageContentAction::class);
         $group->get('/{id}', FindOneByIdAndNotGreaterLevelConfigPageContentAction::class);
+        // $group->get('/{id}/all', FindAllByIdConfigPageContentAction::class);
+        $group->get('/{id}/{level}', FindOneByIdAndLevelConfigPageContentAction::class);
     });
 
     // 签到日志查找相关路由

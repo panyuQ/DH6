@@ -111,7 +111,7 @@ class DatabaseUsersRepository implements UsersRepository
      * @param string $field 字段名。
      * @return string|int|null 字段值，如果未找到则返回 null。
      */
-    public function findFieldById(int $id, string $field)
+    public function findFieldById(int $id, string $field): mixed
     {
         $sql = "SELECT `$field` FROM users WHERE id = :id";
         $stmt = $this->pdo->prepare($sql);
@@ -119,6 +119,14 @@ class DatabaseUsersRepository implements UsersRepository
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
         return $row ? $row[$field] : null;
+    }
+
+    public function findHighestLevel(): int|null
+    {
+        $stmt = $this->pdo->prepare('SELECT MAX(level) AS max_level FROM users');
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $row ? (int) $row['max_level'] : null;
     }
 
     public function contrastField(int $id, string $field, string $fieldValue): bool

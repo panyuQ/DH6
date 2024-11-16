@@ -21,6 +21,8 @@ interface UsersRepository
 
     public function findFieldById(int $id, string $field);
 
+    public function findHighestLevel();
+
     public function contrastField(int $id, string $field, string $fieldValue): bool;
 
     public function updateLastTime(int $id): int;
