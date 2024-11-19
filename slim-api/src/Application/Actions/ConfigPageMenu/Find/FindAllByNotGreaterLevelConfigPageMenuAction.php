@@ -21,7 +21,9 @@ class FindAllByNotGreaterLevelConfigPageMenuAction extends ConfigPageMenuAction
 
         $configPageMenu = $this->configPageMenuRepository->findAllByNotGreaterLevel($level);
         $this->logger->info("查找数据 `config_page_menu`-`*` (level <= ${id})");
-
-        return $this->respondWithData($configPageMenu);
+        if (empty($configPageMenu)) {
+            return $this->respondWithData(['result' => false, 'message' =>'数据不存在']);
+        }
+        return $this->respondWithData(['result' => true, 'data' => $configPageMenu]);
     }
 }

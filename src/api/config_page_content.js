@@ -9,5 +9,13 @@ export const findOneByIdAndLevel = async (id, level) => {
 };
 
 export const findAll = async() => {
-    return await fetchData(`/find/config_page_content`);
+    return await fetchData(`/find/config_page_content/all`);
+}
+
+export const findAllById = async(id) => {
+    return await fetchData(`/find/config_page_content/all/${id}`);
+}
+
+export const findAllIdAndLevel = async() => {
+    return await fetchData(`/find/config_page_content/id_and_level`);
 }

@@ -27,12 +27,17 @@ const handleSelect = (key, keyPath = null) => {
 }
 
 const checkLoginStatus = async () => {
-    const result = await loginStatus();
+    let result = await loginStatus();
     if (!result.result) {
         logOut();
     } else {
         status.value = result;
-        DATA.value.menu = await findAllByNotGreaterLevel()
+        result = await findAllByNotGreaterLevel();
+        if (result.result) {
+            DATA.value.menu = result.data;
+        } else {
+            DATA.value.menu = [];
+        }
     }
 };
 

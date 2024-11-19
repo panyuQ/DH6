@@ -12,38 +12,51 @@ const props = defineProps({
     datas: {
         type: Object,
         default: null
+    },
+    stringDatas: {
+        type: String,
+        default: null
     }
 });
 
+// 使用 toRef 将 props.pageIndex 转换为响应式引用
+const pageIndexRef = toRef(props, 'pageIndex');
+const datasRef = toRef(props, 'datas');
+const stringDatas = toRef(props, 'stringDatas');
 const DATA = ref({});
 const VALUE = ref({});
 const EDIT = ref(false);
-onMounted(async () => {
-    if (props.datas == null) {
-        // 使用 toRef 将 props.pageIndex 转换为响应式引用
-        const pageIndexRef = toRef(props, 'pageIndex');
 
-        watch(pageIndexRef, async (newPageIndex) => {
-            if (newPageIndex != null) {
-                if (newPageIndex === 99) {
-                    EDIT.value = true;
-                    console.log(newPageIndex)
-                } else {
-                    EDIT.value = false;
-                    const data = await findOneByIdAndNotGreaterLevel(newPageIndex);
-                    if (data.result) {
-                        DATA.value = JSON.parse(data.content.data);
-                    } else {
-                        DATA.value = null;
-                    }
 
-                }
+watch(pageIndexRef, async (newPageIndex) => {
+    if (newPageIndex != null) {
+        if (newPageIndex === 99) {
+            EDIT.value = true;
+            console.log(newPageIndex)
+        } else {
+            EDIT.value = false;
+            const data = await findOneByIdAndNotGreaterLevel(newPageIndex);
+            if (data.result) {
+                DATA.value = JSON.parse(data.content.data);
+            } else {
+                DATA.value = null;
             }
-        });
-    } else {
-        DATA.value = props.datas;
+
+        }
     }
-});
+}, { immediate: true });
+
+watch(datasRef, async (newDatas) => {
+    if (newDatas) {
+        DATA.value = newDatas;
+    }
+}, { immediate: true })
+watch(stringDatas, async (newStringDatas) => {
+    if (newStringDatas) {
+        const data = JSON.parse(newStringDatas);
+        DATA.value = data;
+    }
+}, { immediate: true })
 
 watch(DATA, async (newData) => {
     const api = newData?.api ?? []
@@ -53,7 +66,7 @@ watch(DATA, async (newData) => {
             VALUE.value[key] = responseData[field]
         }
     }
-})
+}, { immediate: true })
 
 
 </script>

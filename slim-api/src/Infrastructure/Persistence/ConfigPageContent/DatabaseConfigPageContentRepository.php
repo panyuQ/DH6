@@ -29,6 +29,42 @@ class DatabaseConfigPageContentRepository implements ConfigPageContentRepository
         $this->pdo = $pdo;
     }
 
+    public function findAll(): array
+    {
+
+        $sql = 'SELECT * FROM config_page_content ORDER BY id ASC, level ASC';
+        $stmt = $this->pdo->query($sql);
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $result = [];
+        foreach ($rows as $row) {
+            $result[] = new ConfigPageContent(
+                (int) $row['id'],
+                (int) $row['level'],
+                $row['data'],
+            );
+        }
+
+        return $result;
+    }
+
+public function findAllById(int $id): array{
+    
+    $sql = 'SELECT * FROM config_page_content WHERE id = :id ORDER BY level ASC';
+    $stmt = $this->pdo->prepare($sql);
+    $stmt->execute(['id' => $id]);
+    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $result = [];
+    foreach ($rows as $row) {
+        $result[] = new ConfigPageContent(
+            (int) $row['id'],
+            (int) $row['level'],
+            $row['data'],
+        );
+    }
+
+    return $result;
+}
+    
     public function findOneByIdAndNotGreaterLevel(int $id, int $level = 0): ?ConfigPageContent
     {
         // 构建 SQL 查询，查找不大于 $level 的最大 level 的记录

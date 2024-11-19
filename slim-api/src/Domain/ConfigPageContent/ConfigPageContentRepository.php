@@ -5,6 +5,9 @@ namespace App\Domain\ConfigPageContent;
 
 interface ConfigPageContentRepository
 {
+    public function findAll(): array;
+
+    public function findAllById(int $id): array;
     /**
      * @return ConfigPageContent
      */

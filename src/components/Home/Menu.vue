@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import * as Icons from '@element-plus/icons-vue';
-import { ref, computed } from 'vue';
+import { computed } from 'vue';
 import type { PropType } from 'vue';
 
 interface MenuItem {
@@ -41,16 +41,18 @@ const DATA = computed(() => {
     const folder: Record<string, MenuItem[]> = {};
 
     props.datas.forEach((item) => {
-        if (item.folder != null) {
-            if (item.name == null) {
-                result.push(item);
-                item.children = [];
-                folder[item.folder] = item.children;
+        if (item.id != 0) {
+            if (item.folder != null) {
+                if (item.name == null) {
+                    result.push(item);
+                    item.children = [];
+                    folder[item.folder] = item.children;
+                } else {
+                    (folder[item.folder] || (folder[item.folder] = [])).push(item);
+                }
             } else {
-                (folder[item.folder] || (folder[item.folder] = [])).push(item);
+                result.push(item);
             }
-        } else {
-            result.push(item);
         }
     });
 

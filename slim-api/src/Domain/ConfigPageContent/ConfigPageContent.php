@@ -13,7 +13,7 @@ class ConfigPageContent implements JsonSerializable
     private $id;
 
     /**
-     * @var int
+     * @var int|null
      */
     private $level;
 
@@ -26,9 +26,9 @@ class ConfigPageContent implements JsonSerializable
     /**
      * 构造函数
      *
-     * @param int|null  $id
-     * @param int       $level
-     * @param string|null  $data
+     * @param int|null      $id
+     * @param int|null      $level
+     * @param string|null   $data
      */
     public function __construct(
         int $id = null,

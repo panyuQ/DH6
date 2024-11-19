@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 
+use App\Application\Actions\ConfigPageContent\Find\FindAllConfigPageContentAction;
+use App\Application\Actions\ConfigPageContent\Find\FindAllByIdConfigPageContentAction;
 use App\Application\Actions\ConfigPageContent\Find\FindOneByIdAndNotGreaterLevelConfigPageContentAction;
 use App\Application\Actions\ConfigPageContent\Find\FindOneByIdAndLevelConfigPageContentAction;
 use App\Application\Actions\ConfigPageContent\Find\FindIdAndLevelConfigPageContentAction;
@@ -88,9 +90,10 @@ return function (App $app) {
     });
 
     $app->group('/find/config_page_content', function (Group $group) {
+        $group->get('/all', FindAllConfigPageContentAction::class);
         $group->get('/id_and_level', FindIdAndLevelConfigPageContentAction::class);
         $group->get('/{id}', FindOneByIdAndNotGreaterLevelConfigPageContentAction::class);
-        // $group->get('/{id}/all', FindAllByIdConfigPageContentAction::class);
+        $group->get('/all/{id}', FindAllByIdConfigPageContentAction::class);
         $group->get('/{id}/{level}', FindOneByIdAndLevelConfigPageContentAction::class);
     });
 

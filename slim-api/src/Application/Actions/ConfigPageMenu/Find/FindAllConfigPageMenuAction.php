@@ -17,6 +17,9 @@ class FindAllConfigPageMenuAction extends ConfigPageMenuAction
 
         $configPageMenu = $this->configPageMenuRepository->findAll();
         $this->logger->info("查找数据 `config_page_menu`-`*`");
-        return $this->respondWithData($configPageMenu);
+        if (empty($configPageMenu)) {
+            return $this->respondWithData(['result' => false, 'message' =>'数据不存在']);
+        }
+        return $this->respondWithData(['result' => true, 'data' => $configPageMenu]);
     }
 }
