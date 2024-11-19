@@ -1,14 +1,14 @@
 <script setup>
 import { isRoot } from '@/api';
 import * as Icons from '@element-plus/icons-vue';
-import { ref, onBeforeMount } from 'vue';
+import { ref, onBeforeMount,reactive,computed } from 'vue';
 import Content from './Content.vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 
 const status = ref(false);
 const DATA_MENU = ref(null);
 const DATA_CONTENT = ref(null);
-const PAGE = ref({
+const PAGE = reactive({
     id: null,
     level: null,
     idData: null,
@@ -16,6 +16,9 @@ const PAGE = ref({
 });
 const showSource = ref(false);
 const formRef = ref({});
+
+const drawerEdit1 = ref(false);
+const drawerEdit2 = ref(false);
 const INIT = () => {
     status.value = false;
     DATA_MENU.value = null;
@@ -58,18 +61,31 @@ const toLabel = (folder, name) => {
     }
 }
 
+const textareaValue = computed({
+    get() {
+        return PAGE.levelData ? JSON.stringify(PAGE.levelData, null, 2) : '';
+    },
+    set(value) {
+        try {
+            PAGE.levelData = value ? JSON.parse(value) : null;
+        } catch (e) {
+            ElMessage.error('输入的内容不是有效的JSON格式');
+        }
+    }
+});
+
 const changeID = async (value) => {
-    PAGE.value.id = value;
-    PAGE.value.level = null;
-    PAGE.value.idData = DATA_MENU.value[value]
-    PAGE.value.levelData = null;
+    PAGE.id = value;
+    PAGE.level = null;
+    PAGE.idData = DATA_MENU.value[value]
+    PAGE.levelData = null;
     showSource.value = false;
     await loadData_content(value);
 }
 const changeLEVEL = (value) => {
     DATA_CONTENT.value.forEach(item => {
         if (item.level === value) {
-            PAGE.value.levelData = item.data;
+            PAGE.levelData = JSON.parse(item.data);
             return;
         }
     });
@@ -84,9 +100,9 @@ const add1 = () => {
         sort: 0,
     }
     formRef.value = data;
-    PAGE.value.idData = formRef.value;
+    PAGE.idData = formRef.value;
 }
-const openElMessageBox_add2 = () => {
+const startAdd2 = () => {
     ElMessageBox.prompt('输入想要添加的页面等级（非负整数）', '添加（等级）页面', {
         confirmButtonText: '确认',
         cancelButtonText: '取消',
@@ -97,6 +113,14 @@ const openElMessageBox_add2 = () => {
         .then(({ value }) => {
             ElMessage.warning(`将添加等级为 ${value} 的页面`)
         })
+}
+
+const startEdit2 = () => {
+    drawerEdit2.value = true;
+}
+
+const handleCOL = (data) => {
+    console.log(data)
 }
 </script>
 
@@ -142,11 +166,8 @@ const openElMessageBox_add2 = () => {
                     <el-form-item>
                         <el-select v-model="PAGE.level" placeholder="等级" @change="changeLEVEL">
                             <template #footer v-if="PAGE.id != null">
-                                <el-button :icon="Icons.Plus" @click="openElMessageBox_add2">
+                                <el-button :icon="Icons.Plus" @click="startAdd2">
                                     添加
-                                </el-button>
-                                <el-button v-if="PAGE.level" :icon="Icons.Edit">
-                                    编辑
                                 </el-button>
                                 <el-popconfirm v-if="PAGE.level" title="是否删除当前选中项?">
                                     <template #reference>
@@ -168,6 +189,14 @@ const openElMessageBox_add2 = () => {
                             <el-radio-button label="隐藏源码" :value="false" />
                         </el-radio-group>
                     </el-form-item>
+                </el-col>
+                <el-col :span="3" v-if="PAGE.level">
+
+                    <el-affix :offset="10">
+                        <el-button :icon="Icons.Edit" @click="startEdit2">
+                            编辑
+                        </el-button>
+                    </el-affix>
                 </el-col>
             </el-row>
             <el-row :gutter="10" v-if="PAGE.idData">
@@ -209,19 +238,23 @@ const openElMessageBox_add2 = () => {
             <el-row v-if="showSource">
                 <el-col :span="20">
                     <el-form-item>
-                        <el-input type="textarea" v-model="PAGE.levelData" :autosize="{ minRows: 2, maxRows: 15 }"
+                        <el-input type="textarea" v-model="textareaValue" :autosize="{ minRows: 2, maxRows: 15 }"
                             :show-word-limit="true" />
                     </el-form-item>
                 </el-col>
             </el-row>
         </el-form>
-        <h1>预览</h1>
-        <div style="border-top: 1px solid var(--color-text-1);" v-if="PAGE.levelData">
-
-            <Content v-if="PAGE.levelData" :stringDatas="PAGE.levelData" />
+        <div class="CONTENT">
+            <h1>预览</h1>
+            <div v-if="PAGE.levelData">
+                <Content v-if="PAGE.levelData" :datas="PAGE.levelData" @clickCOL="handleCOL" />
+            </div>
         </div>
-    </template>
 
+    </template>
+    <el-drawer modal-class="drawer" v-model="drawerEdit2" title="等级页面编辑" direction="ltr" append-to-body>
+
+    </el-drawer>
 </template>
 
 <style scoped>
@@ -254,5 +287,21 @@ const openElMessageBox_add2 = () => {
 
 .icon .image {
     max-height: 100%;
+}
+
+:deep(.drawer) {
+    --el-drawer-bg-color: var(--color-background-mute);
+}
+
+.CONTENT {
+    border-top: 1px solid var(--color-text-1);
+}
+
+.CONTENT h1 {
+    margin-bottom: 10px
+}
+
+.CONTENT :deep(.el-col:hover) {
+    outline: 1px solid var(--color-text-1);
 }
 </style>

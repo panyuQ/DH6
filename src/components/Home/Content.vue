@@ -19,6 +19,8 @@ const props = defineProps({
     }
 });
 
+const emit = defineEmits(['clickCOL']); // 定义自定义事件
+
 // 使用 toRef 将 props.pageIndex 转换为响应式引用
 const pageIndexRef = toRef(props, 'pageIndex');
 const datasRef = toRef(props, 'datas');
@@ -68,7 +70,9 @@ watch(DATA, async (newData) => {
     }
 }, { immediate: true })
 
-
+const clickCOL = (data) => {
+    emit('clickCOL', data); // 触发自定义事件
+}
 </script>
 
 <template>
@@ -119,7 +123,7 @@ watch(DATA, async (newData) => {
             :tag="ROW?.tag">
 
             <el-col v-for="COL in ROW.COLS" :span="COL?.span" :offset="COL?.offset" :pull="COL?.pull" :push="COL?.push"
-                :tag="COL?.tag">
+                :tag="COL?.tag" @click="clickCOL(COL)">
 
                 <el-form-item :label-width="COL?.label?.width" :label-position="COL?.label?.position">
                     <template #label v-if="COL?.label?.content">
